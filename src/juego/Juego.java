@@ -14,7 +14,7 @@ public class Juego extends InterfaceJuego {
     private Tablero tablero;
 
     //Imagenes
-    private Image imgFondoPasto, imgRoseBlade, imgWallNut, gifZombie, gifZombieFast, gifProyectil, imgRegalo;
+    private Image imgFondoPasto, imgRoseBlade, imgWallNut, gifZombie, gifZombieFast, gifProyectil, imgRegalo, imgUI;
 
     //UI 
     private static final double CARTA1_X = 50; /*...*/ private static final double CARTA1_Y = 50; /*...*/ private static final double CARTA_UI_ANCHO = 40; /*...*/ private static final double CARTA_UI_ALTO = 40; /*...*/ private static final double COOLDOWN_ROSEBLADE = 5.0; /*...*/ private RoseBlade cartaRoseBlade;
@@ -29,11 +29,12 @@ public class Juego extends InterfaceJuego {
 
     Juego() {
         this.entorno = new Entorno(this, "La Invasión Grinch", 800, 600);
-        this.imgFondoPasto = Herramientas.cargarImagen("Field.png"); this.imgRoseBlade = Herramientas.cargarImagen("RoseBlade.png"); this.imgWallNut = Herramientas.cargarImagen("WallNut.png"); this.gifZombie = Herramientas.cargarImagen("Zombie.gif"); this.gifZombieFast = Herramientas.cargarImagen("ZombieFast.gif"); this.gifProyectil = Herramientas.cargarImagen("Fireball.gif"); this.imgRegalo = Herramientas.cargarImagen("regalo.png");
+        this.imgFondoPasto = Herramientas.cargarImagen("Field.png"); this.imgRoseBlade = Herramientas.cargarImagen("RoseBlade.png"); this.imgWallNut = Herramientas.cargarImagen("WallNut.png"); this.gifZombie = Herramientas.cargarImagen("Zombie.gif"); this.gifZombieFast = Herramientas.cargarImagen("ZombieFast.gif"); this.gifProyectil = Herramientas.cargarImagen("Fireball.gif"); this.imgRegalo = Herramientas.cargarImagen("regalo.png"); this.imgUI = Herramientas.cargarImagen("UI.png");
         this.tablero = new Tablero(this.imgFondoPasto, this.imgRoseBlade, this.imgWallNut, this.gifZombie, this.gifZombieFast, this.gifProyectil, this.imgRegalo);
         this.cartaRoseBlade = new RoseBlade(CARTA1_X, CARTA1_Y, this.imgRoseBlade); this.cartaWallNut = new WallNut(CARTA2_X, CARTA2_Y, this.imgWallNut);
         this.plantaSiendoArrastrada = null; this.tipoPlantaArrastrada = null; this.mouseEstabaPresionado = false; this.plantaSeleccionada = null;
         this.entorno.iniciar();
+        
     }
 
     public void tick() {
@@ -125,7 +126,7 @@ public class Juego extends InterfaceJuego {
     //Trabaja con Object y hace casting
     private void dibujarUI() {
         // Fondo UI 
-        Color cFondo=new Color(101,67,33), cBorde=new Color(210,180,140); this.entorno.dibujarRectangulo(400,50,800,100,0,cFondo); this.entorno.dibujarRectangulo(400,100,800,2,0,cBorde);
+    	this.entorno.dibujarImagen(this.imgUI, 400, 25, 0, 1.0);
         // Carta 1 
         this.cartaRoseBlade.dibujar(this.entorno); double cd1=this.cartaRoseBlade.getTiempoCargaRestante(); if(cd1>0){this.entorno.dibujarRectangulo(CARTA1_X,CARTA1_Y,CARTA_UI_ANCHO,CARTA_UI_ALTO,0,new Color(0,0,0,150)); this.entorno.cambiarFont(null,16,Color.WHITE,1); this.entorno.escribirTexto(String.format("%.1f",cd1),CARTA1_X-(CARTA_UI_ANCHO/4),CARTA1_Y+5);}
         // Carta 2 
