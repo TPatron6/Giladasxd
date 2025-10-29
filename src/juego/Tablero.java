@@ -63,7 +63,7 @@ public class Tablero {
 
     //pone los 5 regalos a la izquierda
     private void inicializarRegalosFijos() {
-        final double X_COLUMNA = 30;
+        final double X_COLUMNA = 50;
         final double INICIO_Y = INICIO_Y_GRILLA + (ALTO_CELDA / 2);
         for (int i = 0; i < NUM_FILAS; i++) {
             double yPos = INICIO_Y + (i * ALTO_CELDA);

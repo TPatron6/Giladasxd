@@ -10,8 +10,8 @@ public class Regalo {
     
     private ObjetoDeJuego base; 
     
-    private static final double ANCHO = 40; 
-    private static final double ALTO = 40;
+    private static final double ANCHO = 80; 
+    private static final double ALTO = 80;
     
     public Regalo(double x, double y, Image imagen) {
         this.base = new ObjetoDeJuego(x, y, ANCHO, ALTO, imagen);
