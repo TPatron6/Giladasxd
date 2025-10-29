@@ -16,10 +16,10 @@ public class Zombie {
     private double tiempoHastaAtaque;
     private static final double COOLDOWN_ATAQUE = 1.5;
 
-    private static final double ANCHO = 65;
-    private static final double ALTO = 65;  
+    private static final double ANCHO = 100;
+    private static final double ALTO = 100;  
     
-    private static final int VIDA_INICIAL = 100;
+    private static final int VIDA_INICIAL = 150;
 
     public Zombie(double x, double y, Image imagen, double velocidad) {
         // Pasa el nuevo tamaño al constructor de ObjetoDeJuego
@@ -55,9 +55,20 @@ public class Zombie {
     public void dibujar(Entorno e) {
         this.base.dibujar(e);
         // Barra de vida (creo que no funciona bien)
-        if (this.vida > 0 && this.vida < VIDA_INICIAL) { // Solo mostrar si está dañado
-             e.dibujarRectangulo(this.base.getX(), this.base.getY() - (ALTO / 2) - 5,
-                                 ANCHO * (this.vida / (double)VIDA_INICIAL), 5, 0, Color.GREEN);
+        if (this.vida < 150){ // Solo mostrar si está dañado
+        //dibuja el fonde de la barra en rojo
+        	e.dibujarRectangulo(this.base.getX(), this.base.getY() - (ALTO / 2) + 5,
+                    			 ANCHO, 5, 0, Color.RED);
+        //calcula el ancho de la vida restante	
+        	double porcentajeVida = this.vida / (double)VIDA_INICIAL;
+        	double anchoVida = ANCHO * porcentajeVida;
+        	
+        // 
+        	double xBarraVida = this.base.getX() - (ANCHO / 2) + (anchoVida / 2);
+        	
+        	//
+        	
+        	e.dibujarRectangulo(xBarraVida, this.base.getY() - (ALTO / 2) + 5, anchoVida, 5, 0, Color.GREEN);
         }
     }
 

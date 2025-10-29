@@ -17,8 +17,8 @@ public class WallNut {
     private double tiempoCargaRestante; //Para el prototipo de la UI
 
     // --- Constantes ---
-    public static final double ANCHO_WALLNUT = 45; // 'public static'
-    public static final double ALTO_WALLNUT = 45;
+    public static final double ANCHO_WALLNUT = 65; // 'public static'
+    public static final double ALTO_WALLNUT = 65;
     private static final int VIDA_WALLNUT = 1000;
 
 

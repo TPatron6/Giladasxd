@@ -13,8 +13,8 @@ public class Proyectil {
     
     private ObjetoDeJuego base;
     
-    private static final double ANCHO = 20;
-    private static final double ALTO = 20;
+    private static final double ANCHO = 50;
+    private static final double ALTO = 50;
     private static final double VELOCIDAD = 5.0; // Píxeles por tick
     private static final int DANO = 50; // 2 disparos para matar un zombie (asumiendo 100 de vida)
 
