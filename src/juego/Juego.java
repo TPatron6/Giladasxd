@@ -7,25 +7,39 @@ import entorno.InterfaceJuego;
 import entorno.Herramientas;
 import juego.planta.RoseBlade;
 import juego.planta.WallNut;
+import juego.planta.PlantaExplosiva;
 
 public class Juego extends InterfaceJuego {
 
     private Entorno entorno;
     private Tablero tablero;
 
-    //Imagenes
-    private Image imgFondoPasto, imgRoseBlade, imgWallNut, gifZombie, gifZombieFast, gifProyectil, imgRegalo, imgUI;
+    // Imagenes
+    private Image imgFondoPasto, imgRoseBlade, imgWallNut, imgPlantaExplosiva, imgTumba,
+            gifZombie, gifZombieFast, gifZombieSlow, gifZombieShooter, gifZombieBoss,
+            gifProyectil, gifProyectilZombie, imgRegalo, imgUI, gifExplosion;
 
-    //UI 
-    private static final double CARTA1_X = 50; /*...*/ private static final double CARTA1_Y = 50; /*...*/ private static final double CARTA_UI_ANCHO = 40; /*...*/ private static final double CARTA_UI_ALTO = 40; /*...*/ private static final double COOLDOWN_ROSEBLADE = 5.0; /*...*/ private RoseBlade cartaRoseBlade;
-    private static final double CARTA2_X = 120; /*...*/ private static final double CARTA2_Y = 50; /*...*/ private static final double CARTA2_UI_ANCHO = 45; /*...*/ private static final double CARTA2_UI_ALTO = 45; /*...*/ private static final double COOLDOWN_WALLNUT = 15.0; /*...*/ private WallNut cartaWallNut;
+    // UI
+    private static final double CARTA1_X = 50;
+    private static final double CARTA2_X = 120;
+    private static final double CARTA3_X = 190;
+    private static final double CARTA_Y = 50;
+    private static final double CARTA_UI_ANCHO = 45;
+    private static final double CARTA_UI_ALTO = 45;
+    
+    private static final double COOLDOWN_ROSEBLADE = 5.0;
+    private static final double COOLDOWN_WALLNUT = 15.0;
+    private static final double COOLDOWN_EXPLOSIVA = 20.0;
+    
+    private RoseBlade cartaRoseBlade;
+    private WallNut cartaWallNut;
+    private PlantaExplosiva cartaPlantaExplosiva;
 
-    private Object plantaSiendoArrastrada; // Puede ser RoseBlade o WallNut
+    private Object plantaSiendoArrastrada;
     private String tipoPlantaArrastrada;
     private boolean mouseEstabaPresionado;
+    private Object plantaSeleccionada;
 
-    private Object plantaSeleccionada; // Puede ser RoseBlade o WallNut
-    
     private static final double BOTON_REINICIO_X = 400;
     private static final double BOTON_REINICIO_Y = 350;
     private static final double BOTON_REINICIO_ANCHO = 220;
@@ -34,21 +48,41 @@ public class Juego extends InterfaceJuego {
 
     Juego() {
         this.entorno = new Entorno(this, "La Invasión Grinch", 800, 600);
-        this.imgFondoPasto = Herramientas.cargarImagen("Field.png"); this.imgRoseBlade = Herramientas.cargarImagen("RoseBlade.png"); this.imgWallNut = Herramientas.cargarImagen("WallNut.png"); this.gifZombie = Herramientas.cargarImagen("Zombie.gif"); this.gifZombieFast = Herramientas.cargarImagen("ZombieFast.gif"); this.gifProyectil = Herramientas.cargarImagen("Fireball.gif"); this.imgRegalo = Herramientas.cargarImagen("regalo.png"); this.imgUI = Herramientas.cargarImagen("UI.png");
-        this.tablero = new Tablero(this.imgFondoPasto, this.imgRoseBlade, this.imgWallNut, this.gifZombie, this.gifZombieFast, this.gifProyectil, this.imgRegalo);
-        this.cartaRoseBlade = new RoseBlade(CARTA1_X, CARTA1_Y, this.imgRoseBlade); this.cartaWallNut = new WallNut(CARTA2_X, CARTA2_Y, this.imgWallNut);
-        this.plantaSiendoArrastrada = null; this.tipoPlantaArrastrada = null; this.mouseEstabaPresionado = false; this.plantaSeleccionada = null;
-       
+
+        // Carga de imágenes
+        this.imgFondoPasto = Herramientas.cargarImagen("Field.png");
+        this.imgRoseBlade = Herramientas.cargarImagen("RoseBlade.png");
+        this.imgWallNut = Herramientas.cargarImagen("WallNut.png");
+        this.imgPlantaExplosiva = Herramientas.cargarImagen("planta-explosiva.jpg"); // Corregido a jpg
+        this.imgTumba = Herramientas.cargarImagen("tumba.png"); // <-- NUEVO (Asegúrate que exista)
+        this.gifZombie = Herramientas.cargarImagen("Zombie.gif");
+        this.gifZombieFast = Herramientas.cargarImagen("Fastazul.png");
+        this.gifZombieSlow = Herramientas.cargarImagen("Slowrojo.png");
+        this.gifZombieShooter = Herramientas.cargarImagen("violetashooter.png");
+        this.gifZombieBoss = Herramientas.cargarImagen("zombie-gigante.gif");
+        this.gifProyectil = Herramientas.cargarImagen("FireBall.gif"); // Corregido a B mayúscula
+        this.gifProyectilZombie = Herramientas.cargarImagen("ZombieFireball.gif");
+        this.imgRegalo = Herramientas.cargarImagen("regalo.png");
+        this.imgUI = Herramientas.cargarImagen("UI.png");
+        this.gifExplosion = Herramientas.cargarImagen("explosion.gif");
+
         this.inicializarJuego();
-        
         this.entorno.iniciar();
-        
     }
-    
+
     private void inicializarJuego() {
-        this.tablero = new Tablero(this.imgFondoPasto, this.imgRoseBlade, this.imgWallNut, this.gifZombie, this.gifZombieFast, this.gifProyectil, this.imgRegalo);
-        this.cartaRoseBlade = new RoseBlade(CARTA1_X, CARTA1_Y, this.imgRoseBlade);
-        this.cartaWallNut = new WallNut(CARTA2_X, CARTA2_Y, this.imgWallNut);
+        // Constructor de Tablero
+        this.tablero = new Tablero(
+            this.imgFondoPasto, this.imgRoseBlade, this.imgWallNut, this.imgPlantaExplosiva, this.imgTumba,
+            this.gifZombie, this.gifZombieFast, this.gifZombieSlow, this.gifZombieShooter, this.gifZombieBoss,
+            this.gifProyectil, this.gifProyectilZombie, this.imgRegalo, this.gifExplosion
+        );
+
+        // Cartas de UI
+        this.cartaRoseBlade = new RoseBlade(CARTA1_X, CARTA_Y, this.imgRoseBlade);
+        this.cartaWallNut = new WallNut(CARTA2_X, CARTA_Y, this.imgWallNut);
+        this.cartaPlantaExplosiva = new PlantaExplosiva(CARTA3_X, CARTA_Y, this.imgPlantaExplosiva);
+
         this.plantaSiendoArrastrada = null;
         this.tipoPlantaArrastrada = null;
         this.mouseEstabaPresionado = false;
@@ -56,7 +90,10 @@ public class Juego extends InterfaceJuego {
     }
 
     public void tick() {
-        this.cartaRoseBlade.actualizarCooldown(); this.cartaWallNut.actualizarCooldown();
+        this.cartaRoseBlade.actualizarCooldown();
+        this.cartaWallNut.actualizarCooldown();
+        this.cartaPlantaExplosiva.actualizarCooldown();
+
         this.manejarInput();
         this.tablero.actualizar();
         this.tablero.dibujar(this.entorno);
@@ -64,14 +101,14 @@ public class Juego extends InterfaceJuego {
         this.mouseEstabaPresionado = this.entorno.estaPresionado(entorno.BOTON_IZQUIERDO);
     }
 
-    //casting
     private void manejarInput() {
         boolean clicPresionadoAhora = this.entorno.estaPresionado(entorno.BOTON_IZQUIERDO);
         boolean clicRecienPresionado = clicPresionadoAhora && !this.mouseEstabaPresionado;
         boolean clicRecienSoltado = !clicPresionadoAhora && this.mouseEstabaPresionado;
         double mouseX = this.entorno.mouseX();
         double mouseY = this.entorno.mouseY();
-        
+
+        // Clic en botón de reinicio
         if ((this.tablero.isJuegoTerminado() || this.tablero.isJuegoGanado()) && clicRecienPresionado) {
             boolean clickEnBoton = mouseX > BOTON_REINICIO_X - BOTON_REINICIO_ANCHO / 2 &&
                                    mouseX < BOTON_REINICIO_X + BOTON_REINICIO_ANCHO / 2 &&
@@ -82,107 +119,122 @@ public class Juego extends InterfaceJuego {
                 return;
             }
         }
-        
+
         if (!this.tablero.isJuegoTerminado() && !this.tablero.isJuegoGanado()) {
 
-        //Click logica
-        	if (clicRecienPresionado) {
-        		if (mouseY < Tablero.INICIO_Y_GRILLA) { // Clic en UI
-        			this.plantaSeleccionada = null;
-        			boolean clickEnCarta1 = mouseX > CARTA1_X - CARTA_UI_ANCHO / 2 && mouseX < CARTA1_X + CARTA_UI_ANCHO / 2 && mouseY > CARTA1_Y - CARTA_UI_ALTO / 2 && mouseY < CARTA1_Y + CARTA_UI_ALTO / 2;
+            // Click logica
+            if (clicRecienPresionado) {
+                if (mouseY < Tablero.INICIO_Y_GRILLA) { // Clic en UI
+                    this.plantaSeleccionada = null;
+                    
+                    boolean clickEnCarta1 = mouseX > CARTA1_X - CARTA_UI_ANCHO / 2 && mouseX < CARTA1_X + CARTA_UI_ANCHO / 2 && mouseY > CARTA_Y - CARTA_UI_ALTO / 2 && mouseY < CARTA_Y + CARTA_UI_ALTO / 2;
         			boolean carta1Lista = this.cartaRoseBlade.getTiempoCargaRestante() <= 0;
-        			boolean clickEnCarta2 = mouseX > CARTA2_X - CARTA2_UI_ANCHO / 2 && mouseX < CARTA2_X + CARTA2_UI_ANCHO / 2 && mouseY > CARTA2_Y - CARTA2_UI_ALTO / 2 && mouseY < CARTA2_Y + CARTA2_UI_ALTO / 2;
+        			
+                    boolean clickEnCarta2 = mouseX > CARTA2_X - CARTA_UI_ANCHO / 2 && mouseX < CARTA2_X + CARTA_UI_ANCHO / 2 && mouseY > CARTA_Y - CARTA_UI_ALTO / 2 && mouseY < CARTA_Y + CARTA_UI_ALTO / 2;
         			boolean carta2Lista = this.cartaWallNut.getTiempoCargaRestante() <= 0;
+        			
+                    boolean clickEnCarta3 = mouseX > CARTA3_X - CARTA_UI_ANCHO / 2 && mouseX < CARTA3_X + CARTA_UI_ANCHO / 2 && mouseY > CARTA_Y - CARTA_UI_ALTO / 2 && mouseY < CARTA_Y + CARTA_UI_ALTO / 2;
+        			boolean carta3Lista = this.cartaPlantaExplosiva.getTiempoCargaRestante() <= 0;
 
-                //Asignacion a 'plantaSiendoArrastrada' (tipo Object)
-        			if (clickEnCarta1 && carta1Lista) { this.plantaSiendoArrastrada = new RoseBlade(mouseX, mouseY, this.imgRoseBlade); this.tipoPlantaArrastrada = "RoseBlade"; }
-        			else if (clickEnCarta2 && carta2Lista) { this.plantaSiendoArrastrada = new WallNut(mouseX, mouseY, this.imgWallNut); this.tipoPlantaArrastrada = "WallNut"; }
 
-        		} else { // Clic en Tablero
-        			if (this.plantaSiendoArrastrada == null) {
-                    // getPlantaEnCoordenadas devuelve Object
-        				this.plantaSeleccionada = this.tablero.getPlantaEnCoordenadas(mouseX, mouseY);
-        			}
-        		}
-        	}
-        //Durante Arrastre
-        	if (clicPresionadoAhora && this.plantaSiendoArrastrada != null) {
-            //Necesitamos hacer casting para llamar a setPosicion
-        		if (this.plantaSiendoArrastrada instanceof RoseBlade) {
-        			((RoseBlade)this.plantaSiendoArrastrada).setPosicion(mouseX, mouseY);
-        		} else if (this.plantaSiendoArrastrada instanceof WallNut) {
-        			((WallNut)this.plantaSiendoArrastrada).setPosicion(mouseX, mouseY);
-        		}
-        	}
-        //Fin arrastre
-        	if (clicRecienSoltado) {
-        		if (this.plantaSiendoArrastrada != null && this.tipoPlantaArrastrada != null) {
-        			if (mouseY > Tablero.INICIO_Y_GRILLA) {
-        				double xCelda = Math.floor(mouseX / Tablero.ANCHO_CELDA) * Tablero.ANCHO_CELDA + (Tablero.ANCHO_CELDA / 2);
+                    if (clickEnCarta1 && carta1Lista) { this.plantaSiendoArrastrada = new RoseBlade(mouseX, mouseY, this.imgRoseBlade); this.tipoPlantaArrastrada = "RoseBlade"; }
+                    else if (clickEnCarta2 && carta2Lista) { this.plantaSiendoArrastrada = new WallNut(mouseX, mouseY, this.imgWallNut); this.tipoPlantaArrastrada = "WallNut"; }
+                    else if (clickEnCarta3 && carta3Lista) { this.plantaSiendoArrastrada = new PlantaExplosiva(mouseX, mouseY, this.imgPlantaExplosiva); this.tipoPlantaArrastrada = "PlantaExplosiva"; }
+
+                } else { // Clic en Tablero
+                    if (this.plantaSiendoArrastrada == null) {
+                        this.plantaSeleccionada = this.tablero.getPlantaEnCoordenadas(mouseX, mouseY);
+                    }
+                }
+            }
+            // Durante Arrastre
+            if (clicPresionadoAhora && this.plantaSiendoArrastrada != null) {
+                if (this.plantaSiendoArrastrada instanceof RoseBlade) { ((RoseBlade)this.plantaSiendoArrastrada).setPosicion(mouseX, mouseY); }
+        		else if (this.plantaSiendoArrastrada instanceof WallNut) { ((WallNut)this.plantaSiendoArrastrada).setPosicion(mouseX, mouseY); }
+                else if (this.plantaSiendoArrastrada instanceof PlantaExplosiva) { ((PlantaExplosiva)this.plantaSiendoArrastrada).setPosicion(mouseX, mouseY); }
+            }
+            // Fin arrastre
+            if (clicRecienSoltado) {
+                 if (this.plantaSiendoArrastrada != null && this.tipoPlantaArrastrada != null) {
+                    if (mouseY > Tablero.INICIO_Y_GRILLA) {
+                        double xCelda = Math.floor(mouseX / Tablero.ANCHO_CELDA) * Tablero.ANCHO_CELDA + (Tablero.ANCHO_CELDA / 2);
         				double yCelda = Math.floor((mouseY - Tablero.INICIO_Y_GRILLA) / Tablero.ALTO_CELDA) * Tablero.ALTO_CELDA + Tablero.INICIO_Y_GRILLA + (Tablero.ALTO_CELDA / 2);
-        				boolean plantadaConExito = false;
-        				if (this.tipoPlantaArrastrada.equals("RoseBlade")) { plantadaConExito = this.tablero.agregarRoseBlade(xCelda, yCelda, this.imgRoseBlade); if (plantadaConExito) this.cartaRoseBlade.setTiempoCarga(COOLDOWN_ROSEBLADE); }
-        				else if (this.tipoPlantaArrastrada.equals("WallNut")) { plantadaConExito = this.tablero.agregarWallNut(xCelda, yCelda, this.imgWallNut); if (plantadaConExito) this.cartaWallNut.setTiempoCarga(COOLDOWN_WALLNUT); }
-        			}
-        			this.plantaSiendoArrastrada = null; this.tipoPlantaArrastrada = null;
-        		}
-        	}
-        //Movimiento teclado
-        	if (this.plantaSeleccionada != null && this.plantaSiendoArrastrada == null) {
-        		double dx = 0; double dy = 0; boolean teclaMovimiento = false;
-            // Detección de teclas 
-        		if (this.entorno.sePresiono(this.entorno.TECLA_DERECHA)||this.entorno.sePresiono('d')){dx=Tablero.ANCHO_CELDA;teclaMovimiento=true;} if (this.entorno.sePresiono(this.entorno.TECLA_IZQUIERDA)||this.entorno.sePresiono('a')){dx=-Tablero.ANCHO_CELDA;teclaMovimiento=true;} if (this.entorno.sePresiono(this.entorno.TECLA_ABAJO)||this.entorno.sePresiono('s')){dy=Tablero.ALTO_CELDA;teclaMovimiento=true;} if (this.entorno.sePresiono(this.entorno.TECLA_ARRIBA)||this.entorno.sePresiono('w')){dy=-Tablero.ALTO_CELDA;teclaMovimiento=true;}
+                        boolean plantadaConExito = false;
 
-        		if (teclaMovimiento) {
-                // Necesitamos hacer casting para getX/getY
-        			double currentX=0, currentY=0;
-        			if(this.plantaSeleccionada instanceof RoseBlade){ currentX=((RoseBlade)this.plantaSeleccionada).getX(); currentY=((RoseBlade)this.plantaSeleccionada).getY(); }
-        			else if(this.plantaSeleccionada instanceof WallNut){ currentX=((WallNut)this.plantaSeleccionada).getX(); currentY=((WallNut)this.plantaSeleccionada).getY(); }
+                        if (!this.tablero.estaOcupada(xCelda, yCelda)) {
+                            if (this.tipoPlantaArrastrada.equals("RoseBlade")) { plantadaConExito = this.tablero.agregarRoseBlade(xCelda, yCelda, this.imgRoseBlade); if (plantadaConExito) this.cartaRoseBlade.setTiempoCarga(COOLDOWN_ROSEBLADE); }
+                            else if (this.tipoPlantaArrastrada.equals("WallNut")) { plantadaConExito = this.tablero.agregarWallNut(xCelda, yCelda, this.imgWallNut); if (plantadaConExito) this.cartaWallNut.setTiempoCarga(COOLDOWN_WALLNUT); }
+                            else if (this.tipoPlantaArrastrada.equals("PlantaExplosiva")) { plantadaConExito = this.tablero.agregarPlantaExplosiva(xCelda, yCelda, this.imgPlantaExplosiva); if (plantadaConExito) this.cartaPlantaExplosiva.setTiempoCarga(COOLDOWN_EXPLOSIVA); }
+                        }
+                    }
+                    this.plantaSiendoArrastrada = null; this.tipoPlantaArrastrada = null;
+                }
+            }
+            // Movimiento teclado
+            if (this.plantaSeleccionada != null && this.plantaSiendoArrastrada == null) {
+                double dx = 0; double dy = 0; boolean teclaMovimiento = false;
+                
+                if (this.entorno.sePresiono(this.entorno.TECLA_DERECHA)||this.entorno.sePresiono('d')){dx=Tablero.ANCHO_CELDA;teclaMovimiento=true;} 
+                if (this.entorno.sePresiono(this.entorno.TECLA_IZQUIERDA)||this.entorno.sePresiono('a')){dx=-Tablero.ANCHO_CELDA;teclaMovimiento=true;} 
+                if (this.entorno.sePresiono(this.entorno.TECLA_ABAJO)||this.entorno.sePresiono('s')){dy=Tablero.ALTO_CELDA;teclaMovimiento=true;} 
+                if (this.entorno.sePresiono(this.entorno.TECLA_ARRIBA)||this.entorno.sePresiono('w')){dy=-Tablero.ALTO_CELDA;teclaMovimiento=true;}
 
-        			double targetX = currentX + dx;
-        			double targetY = currentY + dy;
-                // Validación de límites (igual)
-        			boolean dentroLimites = targetX >= Tablero.LIMITE_IZQ + Tablero.ANCHO_CELDA/2 && targetX <= Tablero.LIMITE_DER - Tablero.ANCHO_CELDA/2 && targetY >= Tablero.LIMITE_SUP + Tablero.ALTO_CELDA/2 && targetY <= Tablero.LIMITE_INF - Tablero.ALTO_CELDA/2;
+                if (teclaMovimiento) {
+                    double currentX=0, currentY=0;
+                    if(this.plantaSeleccionada instanceof RoseBlade){ currentX=((RoseBlade)this.plantaSeleccionada).getX(); currentY=((RoseBlade)this.plantaSeleccionada).getY(); }
+                    else if(this.plantaSeleccionada instanceof WallNut){ currentX=((WallNut)this.plantaSeleccionada).getX(); currentY=((WallNut)this.plantaSeleccionada).getY(); }
+                    else if(this.plantaSeleccionada instanceof PlantaExplosiva){ currentX=((PlantaExplosiva)this.plantaSeleccionada).getX(); currentY=((PlantaExplosiva)this.plantaSeleccionada).getY(); }
 
-                // estaOcupadaPorOtraPlanta recibe Object
-        			if (dentroLimites && !this.tablero.estaOcupadaPorOtraPlanta(targetX, targetY, this.plantaSeleccionada)) {
-                    // Hacer casting para llamar a mover
-        				if(this.plantaSeleccionada instanceof RoseBlade){ ((RoseBlade)this.plantaSeleccionada).mover(dx, dy); }
-        				else if(this.plantaSeleccionada instanceof WallNut){ ((WallNut)this.plantaSeleccionada).mover(dx, dy); }
-        			}
-        		}
-        	}
+                    double targetX = currentX + dx;
+                    double targetY = currentY + dy;
+                    boolean dentroLimites = targetX >= Tablero.LIMITE_IZQ + Tablero.ANCHO_CELDA/2 && targetX <= Tablero.LIMITE_DER - Tablero.ANCHO_CELDA/2 && targetY >= Tablero.LIMITE_SUP + Tablero.ALTO_CELDA/2 && targetY <= Tablero.LIMITE_INF - Tablero.ALTO_CELDA/2;
+                    
+                    // Usa la nueva 'estaOcupadaPorOtroObjeto'
+                    if (dentroLimites && !this.tablero.estaOcupadaPorOtroObjeto(targetX, targetY, this.plantaSeleccionada)) {
+                        if(this.plantaSeleccionada instanceof RoseBlade){ ((RoseBlade)this.plantaSeleccionada).mover(dx, dy); }
+                        else if(this.plantaSeleccionada instanceof WallNut){ ((WallNut)this.plantaSeleccionada).mover(dx, dy); }
+                        else if(this.plantaSeleccionada instanceof PlantaExplosiva){ ((PlantaExplosiva)this.plantaSeleccionada).mover(dx, dy); }
+                    }
+                }
+            }
         }
     }
 
-    //Trabaja con Object y hace casting
+
     private void dibujarUI() {
-        // Fondo UI 
-    	this.entorno.dibujarImagen(this.imgUI, 400, 25, 0, 1.0);
-    	this.entorno.dibujarImagen(this.imgUI, 400, 75, Math.PI, 1.0);
-        // Carta 1 
-        this.cartaRoseBlade.dibujar(this.entorno); double cd1=this.cartaRoseBlade.getTiempoCargaRestante(); if(cd1>0){this.entorno.dibujarRectangulo(CARTA1_X,CARTA1_Y,CARTA_UI_ANCHO,CARTA_UI_ALTO,0,new Color(0,0,0,150)); this.entorno.cambiarFont(null,16,Color.WHITE,1); this.entorno.escribirTexto(String.format("%.1f",cd1),CARTA1_X-(CARTA_UI_ANCHO/4),CARTA1_Y+5);}
-        // Carta 2 
-        this.cartaWallNut.dibujar(this.entorno); double cd2=this.cartaWallNut.getTiempoCargaRestante(); if(cd2>0){this.entorno.dibujarRectangulo(CARTA2_X,CARTA2_Y,CARTA2_UI_ANCHO,CARTA2_UI_ALTO,0,new Color(0,0,0,150)); this.entorno.cambiarFont(null,16,Color.WHITE,1); this.entorno.escribirTexto(String.format("%.1f",cd2),CARTA2_X-(CARTA2_UI_ANCHO/4),CARTA2_Y+5);}
+        // Fondo UI
+        this.entorno.dibujarImagen(this.imgUI, 400, 25, 0, 1.0);
+        this.entorno.dibujarImagen(this.imgUI, 400, 75, Math.PI, 1.0);
+        // Carta 1
+        this.cartaRoseBlade.dibujar(this.entorno); double cd1=this.cartaRoseBlade.getTiempoCargaRestante(); if(cd1>0){this.entorno.dibujarRectangulo(CARTA1_X,CARTA_Y,CARTA_UI_ANCHO,CARTA_UI_ALTO,0,new Color(0,0,0,150)); this.entorno.cambiarFont(null,16,Color.WHITE,1); this.entorno.escribirTexto(String.format("%.1f",cd1),CARTA1_X-(CARTA_UI_ANCHO/4),CARTA_Y+5);}
+        // Carta 2
+        this.cartaWallNut.dibujar(this.entorno); double cd2=this.cartaWallNut.getTiempoCargaRestante(); if(cd2>0){this.entorno.dibujarRectangulo(CARTA2_X,CARTA_Y,CARTA_UI_ANCHO,CARTA_UI_ALTO,0,new Color(0,0,0,150)); this.entorno.cambiarFont(null,16,Color.WHITE,1); this.entorno.escribirTexto(String.format("%.1f",cd2),CARTA2_X-(CARTA_UI_ANCHO/4),CARTA_Y+5);}
+        // Carta 3 (NUEVO)
+        this.cartaPlantaExplosiva.dibujar(this.entorno); double cd3=this.cartaPlantaExplosiva.getTiempoCargaRestante(); if(cd3>0){this.entorno.dibujarRectangulo(CARTA3_X,CARTA_Y,CARTA_UI_ANCHO,CARTA_UI_ALTO,0,new Color(0,0,0,150)); this.entorno.cambiarFont(null,16,Color.WHITE,1); this.entorno.escribirTexto(String.format("%.1f",cd3),CARTA3_X-(CARTA_UI_ANCHO/4),CARTA_Y+5);}
+
         // Info Juego
         int el=this.tablero.getZombiesEliminados(), re=this.tablero.getEnemigosRestantes(); double tj=this.tablero.getTiempoDeJuego(); int sc=this.tablero.getScore(); String tf=String.format("%02d:%02d",(int)(tj/60),(int)(tj%60));
-        this.entorno.cambiarFont(null,16,Color.WHITE,0); this.entorno.escribirTexto("Eliminados: "+el,200,40); this.entorno.escribirTexto("Restantes: "+re,200,70); this.entorno.escribirTexto("Tiempo: "+tf,350,40);
+        // Ajuste de posición del texto
+        this.entorno.cambiarFont(null,16,Color.WHITE,0); this.entorno.escribirTexto("Eliminados: "+el,260,40); this.entorno.escribirTexto("Restantes: "+re,260,70); this.entorno.escribirTexto("Tiempo: "+tf,420,40);
         this.entorno.cambiarFont(null,18,Color.ORANGE,1); this.entorno.escribirTexto("SCORE: "+sc,680,50);
 
-        // Planta Arrastrada (Necesita casting para dibujar)
+        // Planta Arrastrada
         if(this.plantaSiendoArrastrada!=null){
             if (this.plantaSiendoArrastrada instanceof RoseBlade) { ((RoseBlade)this.plantaSiendoArrastrada).dibujar(this.entorno); }
             else if (this.plantaSiendoArrastrada instanceof WallNut) { ((WallNut)this.plantaSiendoArrastrada).dibujar(this.entorno); }
+            else if (this.plantaSiendoArrastrada instanceof PlantaExplosiva) { ((PlantaExplosiva)this.plantaSiendoArrastrada).dibujar(this.entorno); }
         }
-        // Planta Seleccionada (Necesita casting para getX/getY/getAncho)
+        // Planta Seleccionada
         if(this.plantaSeleccionada!=null && this.plantaSiendoArrastrada==null){
             double selX=0, selY=0, selAncho=0;
             if(this.plantaSeleccionada instanceof RoseBlade){ selX=((RoseBlade)this.plantaSeleccionada).getX(); selY=((RoseBlade)this.plantaSeleccionada).getY(); selAncho=((RoseBlade)this.plantaSeleccionada).getAncho(); }
             else if(this.plantaSeleccionada instanceof WallNut){ selX=((WallNut)this.plantaSeleccionada).getX(); selY=((WallNut)this.plantaSeleccionada).getY(); selAncho=((WallNut)this.plantaSeleccionada).getAncho(); }
+            else if(this.plantaSeleccionada instanceof PlantaExplosiva){ selX=((PlantaExplosiva)this.plantaSeleccionada).getX(); selY=((PlantaExplosiva)this.plantaSeleccionada).getY(); selAncho=((PlantaExplosiva)this.plantaSeleccionada).getAncho(); }
             this.entorno.dibujarCirculo(selX, selY, selAncho / 1.5, new Color(255, 255, 0, 100));
         }
+        
         // Game Over / Ganaste
-        if(this.tablero.isJuegoTerminado()){this.entorno.cambiarFont(null,30,Color.RED,1); this.entorno.escribirTexto("GAME OVER. REGALO DESTRUIDO.",this.entorno.ancho()/2-150,this.entorno.alto()/2);
+        if(this.tablero.isJuegoTerminado()){this.entorno.cambiarFont(null,30,Color.RED,1); this.entorno.escribirTexto("GAME OVER. REGALO DESTRUIDO.",this.entorno.ancho()/2-150,this.entorno.alto()/2); 
         this.entorno.dibujarRectangulo(BOTON_REINICIO_X, BOTON_REINICIO_Y, BOTON_REINICIO_ANCHO, BOTON_REINICIO_ALTO, 0, new Color(0, 0, 0, 180));
         this.entorno.cambiarFont(null, 22, Color.YELLOW, 1);
         this.entorno.escribirTexto("JUGAR OTRA VEZ", BOTON_REINICIO_X - 100, BOTON_REINICIO_Y + 8);}
@@ -190,7 +242,6 @@ public class Juego extends InterfaceJuego {
         this.entorno.dibujarRectangulo(BOTON_REINICIO_X, BOTON_REINICIO_Y, BOTON_REINICIO_ANCHO, BOTON_REINICIO_ALTO, 0, new Color(0, 0, 0, 180));
         this.entorno.cambiarFont(null, 22, Color.YELLOW, 1);
         this.entorno.escribirTexto("JUGAR OTRA VEZ", BOTON_REINICIO_X - 100, BOTON_REINICIO_Y + 8);}
-        
     }
 
     public static void main(String[] args) {

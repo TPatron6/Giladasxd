@@ -8,7 +8,7 @@ import java.awt.Color;
 import juego.planta.RoseBlade;
 import juego.planta.WallNut;
 
-public class Zombie {
+public class ZombieFast {
 
     private ObjetoDeJuego base;
     private int vida;
@@ -20,14 +20,14 @@ public class Zombie {
 
     private static final double ANCHO = 100;
     private static final double ALTO = 100;
-    private static final int VIDA_INICIAL = 150;
-    private static final int ATAQUE_INICIAL = 25;
+    private static final int VIDA_INICIAL = 100;
+    private static final double VELOCIDAD_INICIAL = 2.0;
+    private static final int ATAQUE_INICIAL = 20;
 
-    public Zombie(double x, double y, Image imagen, double vel) {
+    public ZombieFast(double x, double y, Image imagen) {
         this.base = new ObjetoDeJuego(x, y, ANCHO, ALTO, imagen);
-        System.out.println("-> Creando Zombie (Común) con ANCHO=" + ANCHO);
         this.vida = VIDA_INICIAL;
-        this.velocidad = vel;
+        this.velocidad = VELOCIDAD_INICIAL;
         this.ataque = ATAQUE_INICIAL;
         this.estaColisionandoConPlanta = false;
         this.tiempoHastaAtaque = 0;
@@ -72,10 +72,6 @@ public class Zombie {
     public double getVelocidad() { return this.velocidad; }
 
     // --- NUEVO GETTER PÚBLICO ---
-    /**
-     * Devuelve si el zombie está actualmente colisionando con un obstáculo.
-     * @return true si está colisionando, false si no.
-     */
     public boolean estaColisionandoConPlanta() {
         return this.estaColisionandoConPlanta;
     }

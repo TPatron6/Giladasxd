@@ -8,7 +8,7 @@ import java.awt.Color;
 import juego.planta.RoseBlade;
 import juego.planta.WallNut;
 
-public class Zombie {
+public class ZombieBoss {
 
     private ObjetoDeJuego base;
     private int vida;
@@ -16,18 +16,20 @@ public class Zombie {
     private int ataque;
     private boolean estaColisionandoConPlanta; // PRIVADO
     private double tiempoHastaAtaque;
-    private static final double COOLDOWN_ATAQUE = 1.5;
+    private static final double COOLDOWN_ATAQUE = 1.0;
 
-    private static final double ANCHO = 100;
-    private static final double ALTO = 100;
-    private static final int VIDA_INICIAL = 150;
-    private static final int ATAQUE_INICIAL = 25;
+    private static final double ANCHO = 200;
+    private static final double ALTO = 500;
+    private static final int VIDA_INICIAL = 5000;
+    private static final double VELOCIDAD_INICIAL = 0.4;
+    private static final int ATAQUE_INICIAL = 75;
+    private static final double Y_OFFSET_DIBUJO = -50;
 
-    public Zombie(double x, double y, Image imagen, double vel) {
-        this.base = new ObjetoDeJuego(x, y, ANCHO, ALTO, imagen);
-        System.out.println("-> Creando Zombie (Común) con ANCHO=" + ANCHO);
+    public ZombieBoss(double x, Image imagen) {
+        double ySpawn = 100 + (ALTO / 2);
+        this.base = new ObjetoDeJuego(x, ySpawn, ANCHO, ALTO, imagen);
         this.vida = VIDA_INICIAL;
-        this.velocidad = vel;
+        this.velocidad = VELOCIDAD_INICIAL;
         this.ataque = ATAQUE_INICIAL;
         this.estaColisionandoConPlanta = false;
         this.tiempoHastaAtaque = 0;
@@ -50,13 +52,22 @@ public class Zombie {
     public void setEstaColisionando(boolean colisionando) { this.estaColisionandoConPlanta = colisionando; }
 
     public void dibujar(Entorno e) {
-        this.base.dibujar(e);
+        Image img = this.base.getImagen();
+        if (img != null) {
+            int imgHeight = img.getHeight(null);
+            double escala = 1.0;
+            if (imgHeight > 0) { escala = ALTO / (double)imgHeight; }
+            double yCentroDibujo = this.base.getY() + Y_OFFSET_DIBUJO;
+            e.dibujarImagen(img, this.base.getX(), yCentroDibujo, 0, escala);
+        }
+
         if (this.vida < VIDA_INICIAL){
-        	e.dibujarRectangulo(this.base.getX(), this.base.getY() - (ALTO / 2) + 5, ANCHO, 5, 0, Color.RED);
-        	double porcentajeVida = this.vida / (double)VIDA_INICIAL;
-        	double anchoVida = ANCHO * porcentajeVida;
-        	double xBarraVida = this.base.getX() - (ANCHO / 2) + (anchoVida / 2);
-        	e.dibujarRectangulo(xBarraVida, this.base.getY() - (ALTO / 2) + 5, anchoVida, 5, 0, Color.GREEN);
+            double yBarra = (this.base.getY() + Y_OFFSET_DIBUJO) - (ALTO / 2) + 15;
+            e.dibujarRectangulo(this.base.getX(), yBarra, ANCHO, 10, 0, Color.RED);
+            double porcentajeVida = this.vida / (double)VIDA_INICIAL;
+            double anchoVida = ANCHO * porcentajeVida;
+            double xBarraVida = this.base.getX() - (ANCHO / 2) + (anchoVida / 2);
+            e.dibujarRectangulo(xBarraVida, yBarra, anchoVida, 10, 0, Color.GREEN);
         }
     }
 
@@ -72,10 +83,6 @@ public class Zombie {
     public double getVelocidad() { return this.velocidad; }
 
     // --- NUEVO GETTER PÚBLICO ---
-    /**
-     * Devuelve si el zombie está actualmente colisionando con un obstáculo.
-     * @return true si está colisionando, false si no.
-     */
     public boolean estaColisionandoConPlanta() {
         return this.estaColisionandoConPlanta;
     }

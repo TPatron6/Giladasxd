@@ -4,7 +4,7 @@ import entorno.Entorno;
 import juego.ObjetoDeJuego;
 import juego.Punto;
 import java.awt.Image;
-import java.awt.Color; 
+// import java.awt.Color; // <--- BORRA ESTA LÍNEA
 
 public class Regalo {
     
