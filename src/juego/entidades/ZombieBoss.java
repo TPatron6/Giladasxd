@@ -62,7 +62,7 @@ public class ZombieBoss {
         }
 
         if (this.vida < VIDA_INICIAL){
-            double yBarra = (this.base.getY() + Y_OFFSET_DIBUJO) - (ALTO / 2) + 15;
+            double yBarra = (this.base.getY() + Y_OFFSET_DIBUJO) - (ALTO / 2) + 65;
             e.dibujarRectangulo(this.base.getX(), yBarra, ANCHO, 10, 0, Color.RED);
             double porcentajeVida = this.vida / (double)VIDA_INICIAL;
             double anchoVida = ANCHO * porcentajeVida;

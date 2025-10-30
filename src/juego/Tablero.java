@@ -34,7 +34,7 @@ public class Tablero {
     private static final int MAX_ZOMBIES_SHOOTERS = 3;
     private static final int MAX_ZOMBIES_JEFES = 2;
     private static final int MAX_ZOMBIES_TOTAL = MAX_ZOMBIES_COMUNES + MAX_ZOMBIES_RAPIDOS + MAX_ZOMBIES_LENTOS + MAX_ZOMBIES_SHOOTERS;
-    private static final int ENEMIGOS_PARA_JEFE = 5;
+    private static final int ENEMIGOS_PARA_JEFE = 100;
     private static final double INTERVALO_ZOMBIE = 4.0;
     private static final double CHANCE_TUMBA = 0.25;
 

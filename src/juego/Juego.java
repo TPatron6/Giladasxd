@@ -53,12 +53,12 @@ public class Juego extends InterfaceJuego {
         this.imgFondoPasto = Herramientas.cargarImagen("Field.png");
         this.imgRoseBlade = Herramientas.cargarImagen("RoseBlade.png");
         this.imgWallNut = Herramientas.cargarImagen("WallNut.png");
-        this.imgPlantaExplosiva = Herramientas.cargarImagen("planta-explosiva.jpg"); // Corregido a jpg
+        this.imgPlantaExplosiva = Herramientas.cargarImagen("planta-explosiva.png"); // Corregido a jpg
         this.imgTumba = Herramientas.cargarImagen("tumba.png"); // <-- NUEVO (Asegúrate que exista)
         this.gifZombie = Herramientas.cargarImagen("Zombie.gif");
-        this.gifZombieFast = Herramientas.cargarImagen("Fastazul.png");
+        this.gifZombieFast = Herramientas.cargarImagen("Fastazul.gif");
         this.gifZombieSlow = Herramientas.cargarImagen("Slowrojo.png");
-        this.gifZombieShooter = Herramientas.cargarImagen("violetashooter.png");
+        this.gifZombieShooter = Herramientas.cargarImagen("violetashooter.gif");
         this.gifZombieBoss = Herramientas.cargarImagen("zombie-gigante.gif");
         this.gifProyectil = Herramientas.cargarImagen("FireBall.gif"); // Corregido a B mayúscula
         this.gifProyectilZombie = Herramientas.cargarImagen("ZombieFireball.gif");
