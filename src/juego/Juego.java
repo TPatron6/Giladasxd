@@ -10,6 +10,13 @@ import juego.planta.WallNut;
 import juego.planta.PlantaExplosiva;
 
 public class Juego extends InterfaceJuego {
+	private enum EstadoJuego {
+	    MENU,
+	    JUGANDO,
+	    CREDITOS
+	}
+
+	private EstadoJuego estadoActual = EstadoJuego.MENU;
 
     private Entorno entorno;
     private Tablero tablero;
@@ -31,6 +38,14 @@ public class Juego extends InterfaceJuego {
     private static final double COOLDOWN_WALLNUT = 15.0;
     private static final double COOLDOWN_EXPLOSIVA = 20.0;
     
+    //Botones del menu
+    private static final double BOTON_JUEGO_X = 400;
+    private static final double BOTON_JUEGO_Y = 300;
+    private static final double BOTON_CREDITOS_X = 400;
+    private static final double BOTON_CREDITOS_Y = 400;
+    private static final double BOTON_ANCHO = 220;
+    private static final double BOTON_ALTO = 60;
+    
     private RoseBlade cartaRoseBlade;
     private WallNut cartaWallNut;
     private PlantaExplosiva cartaPlantaExplosiva;
@@ -44,6 +59,10 @@ public class Juego extends InterfaceJuego {
     private static final double BOTON_REINICIO_Y = 350;
     private static final double BOTON_REINICIO_ANCHO = 220;
     private static final double BOTON_REINICIO_ALTO = 50;
+    private static final double BOTON_MENU_X = 400;
+    private static final double BOTON_MENU_Y = 420;
+    private static final double BOTON_MENU_ANCHO = 220;
+    private static final double BOTON_MENU_ALTO = 50;
 
 
     Juego() {
@@ -90,7 +109,25 @@ public class Juego extends InterfaceJuego {
     }
 
     public void tick() {
-        this.cartaRoseBlade.actualizarCooldown();
+    	//Manejo del Menu
+    	switch (estadoActual) {
+        case MENU:
+            dibujarMenu();
+            manejarInputMenu();
+            break;
+        case CREDITOS:
+            dibujarCreditos();
+            manejarInputCreditos();
+            break;
+        case JUGANDO:
+            ejecutarJuego();
+            break;
+    	}
+    }
+    
+    //Logica del tick movida
+    private void ejecutarJuego() {
+    	this.cartaRoseBlade.actualizarCooldown();
         this.cartaWallNut.actualizarCooldown();
         this.cartaPlantaExplosiva.actualizarCooldown();
 
@@ -100,6 +137,43 @@ public class Juego extends InterfaceJuego {
         this.dibujarUI();
         this.mouseEstabaPresionado = this.entorno.estaPresionado(entorno.BOTON_IZQUIERDO);
     }
+    
+    //Menu agregado
+    private void dibujarMenu() {
+        entorno.dibujarRectangulo(400, 300, 800, 600, 0, Color.BLACK);
+        entorno.cambiarFont("Impact", 40, Color.WHITE, 0);
+        entorno.escribirTexto("LA INVASION GRINCH", 210, 150);
+
+        entorno.dibujarRectangulo(BOTON_JUEGO_X, BOTON_JUEGO_Y, BOTON_ANCHO, BOTON_ALTO, 0, new Color(0, 100, 0, 200));
+        entorno.cambiarFont("Impact", 28, Color.YELLOW, 0);
+        entorno.escribirTexto("NUEVA PARTIDA", BOTON_JUEGO_X - 100, BOTON_JUEGO_Y + 8);
+
+        entorno.dibujarRectangulo(BOTON_CREDITOS_X, BOTON_CREDITOS_Y, BOTON_ANCHO, BOTON_ALTO, 0, new Color(50, 50, 50, 200));
+        entorno.cambiarFont("Impact", 26, Color.CYAN, 0);
+        entorno.escribirTexto("CREDITOS", BOTON_CREDITOS_X - 60, BOTON_CREDITOS_Y + 8);
+    }
+    
+    //Menu agregado
+    private void manejarInputMenu() {
+        boolean clic = entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO);
+        double mouseX = entorno.mouseX();
+        double mouseY = entorno.mouseY();
+
+        if (clic) {
+            //Boton "Nueva partida"
+            if (mouseX > BOTON_JUEGO_X - BOTON_ANCHO / 2 && mouseX < BOTON_JUEGO_X + BOTON_ANCHO / 2 &&
+                mouseY > BOTON_JUEGO_Y - BOTON_ALTO / 2 && mouseY < BOTON_JUEGO_Y + BOTON_ALTO / 2) {
+                inicializarJuego();
+                estadoActual = EstadoJuego.JUGANDO;
+            }
+
+            //Boton "Creditos"
+            if (mouseX > BOTON_CREDITOS_X - BOTON_ANCHO / 2 && mouseX < BOTON_CREDITOS_X + BOTON_ANCHO / 2 &&
+                mouseY > BOTON_CREDITOS_Y - BOTON_ALTO / 2 && mouseY < BOTON_CREDITOS_Y + BOTON_ALTO / 2) {
+                estadoActual = EstadoJuego.CREDITOS;
+            }
+        }
+    }
 
     private void manejarInput() {
         boolean clicPresionadoAhora = this.entorno.estaPresionado(entorno.BOTON_IZQUIERDO);
@@ -108,7 +182,7 @@ public class Juego extends InterfaceJuego {
         double mouseX = this.entorno.mouseX();
         double mouseY = this.entorno.mouseY();
 
-        // Clic en botón de reinicio
+        // Clic en boton de reinicio
         if ((this.tablero.isJuegoTerminado() || this.tablero.isJuegoGanado()) && clicRecienPresionado) {
             boolean clickEnBoton = mouseX > BOTON_REINICIO_X - BOTON_REINICIO_ANCHO / 2 &&
                                    mouseX < BOTON_REINICIO_X + BOTON_REINICIO_ANCHO / 2 &&
@@ -116,6 +190,15 @@ public class Juego extends InterfaceJuego {
                                    mouseY < BOTON_REINICIO_Y + BOTON_REINICIO_ALTO / 2;
             if (clickEnBoton) {
                 inicializarJuego();
+                return;
+            }
+            //Click en el boton menu principal
+            boolean clickEnBotonMenu =  mouseX > BOTON_MENU_X - BOTON_MENU_ANCHO / 2 &&
+                    					mouseX < BOTON_MENU_X + BOTON_MENU_ANCHO / 2 &&
+                    					mouseY > BOTON_MENU_Y - BOTON_MENU_ALTO / 2 &&
+                    					mouseY < BOTON_MENU_Y + BOTON_MENU_ALTO / 2;
+            if (clickEnBotonMenu) {
+            	this.estadoActual = EstadoJuego.MENU;
                 return;
             }
         }
@@ -237,11 +320,47 @@ public class Juego extends InterfaceJuego {
         if(this.tablero.isJuegoTerminado()){this.entorno.cambiarFont("Impact",30,Color.RED,0); this.entorno.escribirTexto("¡¡GAME OVER REGALO DESTRUIDO!!",this.entorno.ancho()/2-195,this.entorno.alto()/2); 
         this.entorno.dibujarRectangulo(BOTON_REINICIO_X, BOTON_REINICIO_Y, BOTON_REINICIO_ANCHO, BOTON_REINICIO_ALTO, 0, new Color(0, 0, 0, 180));
         this.entorno.cambiarFont("Impact", 22, Color.YELLOW, 1);
-        this.entorno.escribirTexto("  JUGAR DE NUEVO", BOTON_REINICIO_X - 80, BOTON_REINICIO_Y + 8);}
+        this.entorno.escribirTexto("  JUGAR DE NUEVO", BOTON_REINICIO_X - 80, BOTON_REINICIO_Y + 8);
+        this.entorno.dibujarRectangulo(BOTON_MENU_X, BOTON_MENU_Y, BOTON_MENU_ANCHO, BOTON_MENU_ALTO, 0, new Color(0, 0, 0, 180));
+        this.entorno.cambiarFont("Impact", 22, Color.CYAN, 1);
+        this.entorno.escribirTexto("MENU PRINCIPAL", BOTON_MENU_X - 95, BOTON_MENU_Y + 8);}
         if(this.tablero.isJuegoGanado()){this.entorno.cambiarFont("Impact",30,Color.GREEN,1); this.entorno.escribirTexto("¡FELICIDADES SALVASTE LA NAVIDAD!",this.entorno.ancho()/2-220,this.entorno.alto()/2);
         this.entorno.dibujarRectangulo(BOTON_REINICIO_X, BOTON_REINICIO_Y, BOTON_REINICIO_ANCHO, BOTON_REINICIO_ALTO, 0, new Color(0, 0, 0, 180));
         this.entorno.cambiarFont(null, 22, Color.YELLOW, 1);
-        this.entorno.escribirTexto("JUGAR OTRA VEZ", BOTON_REINICIO_X - 100, BOTON_REINICIO_Y + 8);}
+        this.entorno.escribirTexto("JUGAR OTRA VEZ", BOTON_REINICIO_X - 100, BOTON_REINICIO_Y + 8);
+        this.entorno.dibujarRectangulo(BOTON_MENU_X, BOTON_MENU_Y, BOTON_MENU_ANCHO, BOTON_MENU_ALTO, 0, new Color(0, 0, 0, 180));
+        this.entorno.cambiarFont("Impact", 22, Color.CYAN, 1);
+        this.entorno.escribirTexto("MENU PRINCIPAL", BOTON_MENU_X - 95, BOTON_MENU_Y + 8);}
+    }
+    
+    //Manejo de creditos
+    private void manejarInputCreditos() {
+        boolean clic = entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO);
+        double mouseX = entorno.mouseX();
+        double mouseY = entorno.mouseY();
+
+        if (clic && mouseX > 400 - 90 && mouseX < 400 + 90 &&
+            mouseY > 500 - 25 && mouseY < 500 + 25) {
+            estadoActual = EstadoJuego.MENU;
+        }
+    }
+    
+    //Creditos agregados
+    private void dibujarCreditos() {
+        entorno.dibujarRectangulo(400, 300, 800, 600, 0, Color.BLACK);
+        entorno.cambiarFont("Impact", 36, Color.WHITE, 0);
+        entorno.escribirTexto("CREDITOS", 320, 100);
+
+        entorno.cambiarFont("Arial", 22, Color.LIGHT_GRAY, 0);
+        entorno.escribirTexto("Programacion: ", 180, 200);
+        entorno.escribirTexto("Diseño y Sonido: ", 220, 200);
+        entorno.escribirTexto("Colaborador: ", 260, 200);
+        entorno.escribirTexto("Inspirado en: Plants vs Zombies", 300, 200);
+        entorno.escribirTexto("Gracias por jugar!", 340, 300);
+
+        entorno.dibujarRectangulo(400, 500, 180, 50, 0, new Color(0, 0, 0, 150));
+        entorno.cambiarFont("Impact", 22, Color.YELLOW, 0);
+        entorno.escribirTexto("VOLVER", 340, 510);
     }
 
     public static void main(String[] args) {
