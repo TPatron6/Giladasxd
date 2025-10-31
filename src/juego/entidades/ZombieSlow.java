@@ -18,8 +18,8 @@ public class ZombieSlow {
     private double tiempoHastaAtaque;
     private static final double COOLDOWN_ATAQUE = 1.5;
 
-    private static final double ANCHO = 110;
-    private static final double ALTO = 110;
+    private static final double ANCHO = 80;
+    private static final double ALTO = 80;
     private static final int VIDA_INICIAL = 300;
     private static final double VELOCIDAD_INICIAL = 0.5;
     private static final int ATAQUE_INICIAL = 30;

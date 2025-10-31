@@ -57,7 +57,7 @@ public class Juego extends InterfaceJuego {
         this.imgTumba = Herramientas.cargarImagen("tumba.png"); // <-- NUEVO (Asegúrate que exista)
         this.gifZombie = Herramientas.cargarImagen("Zombie.gif");
         this.gifZombieFast = Herramientas.cargarImagen("Fastazul.gif");
-        this.gifZombieSlow = Herramientas.cargarImagen("Slowrojo.png");
+        this.gifZombieSlow = Herramientas.cargarImagen("Slowrojo.gif");
         this.gifZombieShooter = Herramientas.cargarImagen("violetashooter.gif");
         this.gifZombieBoss = Herramientas.cargarImagen("zombie-gigante.gif");
         this.gifProyectil = Herramientas.cargarImagen("FireBall.gif"); // Corregido a B mayúscula
@@ -215,8 +215,8 @@ public class Juego extends InterfaceJuego {
         // Info Juego
         int el=this.tablero.getZombiesEliminados(), re=this.tablero.getEnemigosRestantes(); double tj=this.tablero.getTiempoDeJuego(); int sc=this.tablero.getScore(); String tf=String.format("%02d:%02d",(int)(tj/60),(int)(tj%60));
         // Ajuste de posición del texto
-        this.entorno.cambiarFont(null,16,Color.WHITE,0); this.entorno.escribirTexto("Eliminados: "+el,260,40); this.entorno.escribirTexto("Restantes: "+re,260,70); this.entorno.escribirTexto("Tiempo: "+tf,420,40);
-        this.entorno.cambiarFont(null,18,Color.ORANGE,1); this.entorno.escribirTexto("SCORE: "+sc,680,50);
+        this.entorno.cambiarFont("Times New Roman",16,Color.WHITE,1); this.entorno.escribirTexto("Eliminados: "+el,260,40); this.entorno.escribirTexto("Restantes: "+re,260,70); this.entorno.escribirTexto("Tiempo: "+tf,420,40);
+        this.entorno.cambiarFont("Times New Roman",18,Color.ORANGE,1); this.entorno.escribirTexto("SCORE: "+sc,680,50);
 
         // Planta Arrastrada
         if(this.plantaSiendoArrastrada!=null){
@@ -234,11 +234,11 @@ public class Juego extends InterfaceJuego {
         }
         
         // Game Over / Ganaste
-        if(this.tablero.isJuegoTerminado()){this.entorno.cambiarFont(null,30,Color.RED,1); this.entorno.escribirTexto("GAME OVER. REGALO DESTRUIDO.",this.entorno.ancho()/2-150,this.entorno.alto()/2); 
+        if(this.tablero.isJuegoTerminado()){this.entorno.cambiarFont("Impact",30,Color.RED,0); this.entorno.escribirTexto("¡¡GAME OVER REGALO DESTRUIDO!!",this.entorno.ancho()/2-195,this.entorno.alto()/2); 
         this.entorno.dibujarRectangulo(BOTON_REINICIO_X, BOTON_REINICIO_Y, BOTON_REINICIO_ANCHO, BOTON_REINICIO_ALTO, 0, new Color(0, 0, 0, 180));
-        this.entorno.cambiarFont(null, 22, Color.YELLOW, 1);
-        this.entorno.escribirTexto("JUGAR OTRA VEZ", BOTON_REINICIO_X - 100, BOTON_REINICIO_Y + 8);}
-        if(this.tablero.isJuegoGanado()){this.entorno.cambiarFont(null,30,Color.GREEN,1); this.entorno.escribirTexto("¡GANASTE! PUEBLO SALVADO.",this.entorno.ancho()/2-150,this.entorno.alto()/2);
+        this.entorno.cambiarFont("Impact", 22, Color.YELLOW, 1);
+        this.entorno.escribirTexto("  JUGAR DE NUEVO", BOTON_REINICIO_X - 80, BOTON_REINICIO_Y + 8);}
+        if(this.tablero.isJuegoGanado()){this.entorno.cambiarFont("Impact",30,Color.GREEN,1); this.entorno.escribirTexto("¡FELICIDADES SALVASTE LA NAVIDAD!",this.entorno.ancho()/2-220,this.entorno.alto()/2);
         this.entorno.dibujarRectangulo(BOTON_REINICIO_X, BOTON_REINICIO_Y, BOTON_REINICIO_ANCHO, BOTON_REINICIO_ALTO, 0, new Color(0, 0, 0, 180));
         this.entorno.cambiarFont(null, 22, Color.YELLOW, 1);
         this.entorno.escribirTexto("JUGAR OTRA VEZ", BOTON_REINICIO_X - 100, BOTON_REINICIO_Y + 8);}
