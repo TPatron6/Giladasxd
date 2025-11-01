@@ -182,7 +182,7 @@ public class Juego extends InterfaceJuego {
         double mouseX = this.entorno.mouseX();
         double mouseY = this.entorno.mouseY();
 
-        // Clic en boton de reinicio
+        // Clic en boton de reinicio al finalizar o perder
         if ((this.tablero.isJuegoTerminado() || this.tablero.isJuegoGanado()) && clicRecienPresionado) {
             boolean clickEnBoton = mouseX > BOTON_REINICIO_X - BOTON_REINICIO_ANCHO / 2 &&
                                    mouseX < BOTON_REINICIO_X + BOTON_REINICIO_ANCHO / 2 &&
@@ -192,7 +192,7 @@ public class Juego extends InterfaceJuego {
                 inicializarJuego();
                 return;
             }
-            //Click en el boton menu principal
+            //Click en el boton menu principal al finalizar o perder
             boolean clickEnBotonMenu =  mouseX > BOTON_MENU_X - BOTON_MENU_ANCHO / 2 &&
                     					mouseX < BOTON_MENU_X + BOTON_MENU_ANCHO / 2 &&
                     					mouseY > BOTON_MENU_Y - BOTON_MENU_ALTO / 2 &&
@@ -318,19 +318,19 @@ public class Juego extends InterfaceJuego {
         
         // Game Over / Ganaste
         if(this.tablero.isJuegoTerminado()){this.entorno.cambiarFont("Impact",30,Color.RED,0); this.entorno.escribirTexto("¡¡GAME OVER REGALO DESTRUIDO!!",this.entorno.ancho()/2-195,this.entorno.alto()/2); 
-        this.entorno.dibujarRectangulo(BOTON_REINICIO_X, BOTON_REINICIO_Y, BOTON_REINICIO_ANCHO, BOTON_REINICIO_ALTO, 0, new Color(0, 0, 0, 180));
-        this.entorno.cambiarFont("Impact", 22, Color.YELLOW, 1);
-        this.entorno.escribirTexto("  JUGAR DE NUEVO", BOTON_REINICIO_X - 80, BOTON_REINICIO_Y + 8);
-        this.entorno.dibujarRectangulo(BOTON_MENU_X, BOTON_MENU_Y, BOTON_MENU_ANCHO, BOTON_MENU_ALTO, 0, new Color(0, 0, 0, 180));
-        this.entorno.cambiarFont("Impact", 22, Color.CYAN, 1);
-        this.entorno.escribirTexto("MENU PRINCIPAL", BOTON_MENU_X - 95, BOTON_MENU_Y + 8);}
+        this.entorno.dibujarRectangulo(BOTON_REINICIO_X, BOTON_REINICIO_Y, BOTON_REINICIO_ANCHO, BOTON_REINICIO_ALTO, 0, new Color(0, 0, 0, 180));//boton de reinicio del juego
+        this.entorno.cambiarFont("Impact", 22, Color.YELLOW, 1);//font del boton
+        this.entorno.escribirTexto("  JUGAR DE NUEVO", BOTON_REINICIO_X - 80, BOTON_REINICIO_Y + 8);//texto del boton
+        this.entorno.dibujarRectangulo(BOTON_MENU_X, BOTON_MENU_Y, BOTON_MENU_ANCHO, BOTON_MENU_ALTO, 0, new Color(0, 0, 0, 180));//boton de menu al finalizar
+        this.entorno.cambiarFont("Impact", 22, Color.CYAN, 1);//font del boton
+        this.entorno.escribirTexto("MENU PRINCIPAL", BOTON_MENU_X - 95, BOTON_MENU_Y + 8);}//texto del boton
         if(this.tablero.isJuegoGanado()){this.entorno.cambiarFont("Impact",30,Color.GREEN,1); this.entorno.escribirTexto("¡FELICIDADES SALVASTE LA NAVIDAD!",this.entorno.ancho()/2-220,this.entorno.alto()/2);
-        this.entorno.dibujarRectangulo(BOTON_REINICIO_X, BOTON_REINICIO_Y, BOTON_REINICIO_ANCHO, BOTON_REINICIO_ALTO, 0, new Color(0, 0, 0, 180));
-        this.entorno.cambiarFont(null, 22, Color.YELLOW, 1);
-        this.entorno.escribirTexto("JUGAR OTRA VEZ", BOTON_REINICIO_X - 100, BOTON_REINICIO_Y + 8);
-        this.entorno.dibujarRectangulo(BOTON_MENU_X, BOTON_MENU_Y, BOTON_MENU_ANCHO, BOTON_MENU_ALTO, 0, new Color(0, 0, 0, 180));
-        this.entorno.cambiarFont("Impact", 22, Color.CYAN, 1);
-        this.entorno.escribirTexto("MENU PRINCIPAL", BOTON_MENU_X - 95, BOTON_MENU_Y + 8);}
+        this.entorno.dibujarRectangulo(BOTON_REINICIO_X, BOTON_REINICIO_Y, BOTON_REINICIO_ANCHO, BOTON_REINICIO_ALTO, 0, new Color(0, 0, 0, 180));//boton de reinicio del juego
+        this.entorno.cambiarFont(null, 22, Color.YELLOW, 1);//font del boton
+        this.entorno.escribirTexto("JUGAR OTRA VEZ", BOTON_REINICIO_X - 100, BOTON_REINICIO_Y + 8);//texto del boton
+        this.entorno.dibujarRectangulo(BOTON_MENU_X, BOTON_MENU_Y, BOTON_MENU_ANCHO, BOTON_MENU_ALTO, 0, new Color(0, 0, 0, 180));//boton de menu al finalizar
+        this.entorno.cambiarFont("Impact", 22, Color.CYAN, 1);//font del boton
+        this.entorno.escribirTexto("MENU PRINCIPAL", BOTON_MENU_X - 95, BOTON_MENU_Y + 8);}//texto del boton
     }
     
     //Manejo de creditos
@@ -352,15 +352,16 @@ public class Juego extends InterfaceJuego {
         entorno.escribirTexto("CREDITOS", 320, 100);
 
         entorno.cambiarFont("Arial", 22, Color.LIGHT_GRAY, 0);
-        entorno.escribirTexto("Programacion: ", 180, 200);
-        entorno.escribirTexto("Diseño y Sonido: ", 220, 200);
-        entorno.escribirTexto("Colaborador: ", 260, 200);
-        entorno.escribirTexto("Inspirado en: Plants vs Zombies", 300, 200);
-        entorno.escribirTexto("Gracias por jugar!", 340, 300);
+        entorno.escribirTexto("Programacion: Lautaro Alvo", 200, 220);
+        entorno.escribirTexto("Diseño y Sonido: Tomas Patroni", 200, 240);
+        entorno.escribirTexto("Colaboracion: Ezequiel Fernandez", 200, 260);
+        entorno.escribirTexto("Comision: 03", 200, 280);
+        entorno.escribirTexto("Profesores: Lucas Bidart Gauna, Leonardo Davalos", 200, 300);
+        entorno.escribirTexto("Gracias por jugar!", 330, 350);
 
         entorno.dibujarRectangulo(400, 500, 180, 50, 0, new Color(0, 0, 0, 150));
         entorno.cambiarFont("Impact", 22, Color.YELLOW, 0);
-        entorno.escribirTexto("VOLVER", 340, 510);
+        entorno.escribirTexto("VOLVER", 350, 510);
     }
 
     public static void main(String[] args) {
