@@ -24,7 +24,7 @@ public class Juego extends InterfaceJuego {
     // Imagenes
     private Image imgFondoPasto, imgRoseBlade, imgWallNut, imgPlantaExplosiva, imgTumba,
             gifZombie, gifZombieFast, gifZombieSlow, gifZombieShooter, gifZombieBoss,
-            gifProyectil, gifProyectilZombie, imgRegalo, imgUI, gifExplosion;
+            gifProyectil, gifProyectilZombie, imgRegalo, imgUI, gifExplosion, imgmenu, imgboton;
 
     // UI
     private static final double CARTA1_X = 50;
@@ -40,9 +40,9 @@ public class Juego extends InterfaceJuego {
     
     //Botones del menu
     private static final double BOTON_JUEGO_X = 400;
-    private static final double BOTON_JUEGO_Y = 300;
+    private static final double BOTON_JUEGO_Y = 400;
     private static final double BOTON_CREDITOS_X = 400;
-    private static final double BOTON_CREDITOS_Y = 400;
+    private static final double BOTON_CREDITOS_Y = 500;
     private static final double BOTON_ANCHO = 220;
     private static final double BOTON_ALTO = 60;
     
@@ -84,7 +84,10 @@ public class Juego extends InterfaceJuego {
         this.imgRegalo = Herramientas.cargarImagen("regalo.png");
         this.imgUI = Herramientas.cargarImagen("UI.png");
         this.gifExplosion = Herramientas.cargarImagen("explosion.gif");
-
+        this.imgmenu = Herramientas.cargarImagen("Menu.png");
+        this.imgboton = Herramientas.cargarImagen("Boton.png");
+        
+        
         this.inicializarJuego();
         this.entorno.iniciar();
     }
@@ -140,17 +143,15 @@ public class Juego extends InterfaceJuego {
     
     //Menu agregado
     private void dibujarMenu() {
-        entorno.dibujarRectangulo(400, 300, 800, 600, 0, Color.BLACK);
-        entorno.cambiarFont("Impact", 40, Color.WHITE, 0);
-        entorno.escribirTexto("LA INVASION GRINCH", 210, 150);
-
+    	entorno.dibujarImagen(this.imgmenu, 400, 300, 0, 1.0);
+        
         entorno.dibujarRectangulo(BOTON_JUEGO_X, BOTON_JUEGO_Y, BOTON_ANCHO, BOTON_ALTO, 0, new Color(0, 100, 0, 200));
         entorno.cambiarFont("Impact", 28, Color.YELLOW, 0);
-        entorno.escribirTexto("NUEVA PARTIDA", BOTON_JUEGO_X - 100, BOTON_JUEGO_Y + 8);
+        entorno.escribirTexto("NUEVA PARTIDA", BOTON_JUEGO_X - 85, BOTON_JUEGO_Y + 10);
 
         entorno.dibujarRectangulo(BOTON_CREDITOS_X, BOTON_CREDITOS_Y, BOTON_ANCHO, BOTON_ALTO, 0, new Color(50, 50, 50, 200));
         entorno.cambiarFont("Impact", 26, Color.CYAN, 0);
-        entorno.escribirTexto("CREDITOS", BOTON_CREDITOS_X - 60, BOTON_CREDITOS_Y + 8);
+        entorno.escribirTexto("CREDITOS", BOTON_CREDITOS_X - 50, BOTON_CREDITOS_Y + 8);
     }
     
     //Menu agregado
@@ -288,6 +289,17 @@ public class Juego extends InterfaceJuego {
         // Fondo UI
         this.entorno.dibujarImagen(this.imgUI, 400, 25, 0, 1.0);
         this.entorno.dibujarImagen(this.imgUI, 400, 75, Math.PI, 1.0);
+        // Reborde negro alrededor del HUD
+        Color bordeNegro = new Color(0, 0, 0);
+        // Línea superior del HUD
+        this.entorno.dibujarRectangulo(400, 1, 800, 4, 0, bordeNegro);
+        // Línea inferior del HUD
+        this.entorno.dibujarRectangulo(400, 105, 800, 4, 0, bordeNegro);
+        // Líneas laterales
+        this.entorno.dibujarRectangulo(1, 55, 4, 105, 0, bordeNegro);
+        this.entorno.dibujarRectangulo(799, 55, 4, 105, 0, bordeNegro);
+
+        
         // Carta 1
         this.cartaRoseBlade.dibujar(this.entorno); double cd1=this.cartaRoseBlade.getTiempoCargaRestante(); if(cd1>0){this.entorno.dibujarRectangulo(CARTA1_X,CARTA_Y,CARTA_UI_ANCHO,CARTA_UI_ALTO,0,new Color(0,0,0,150)); this.entorno.cambiarFont(null,16,Color.WHITE,1); this.entorno.escribirTexto(String.format("%.1f",cd1),CARTA1_X-(CARTA_UI_ANCHO/4),CARTA_Y+5);}
         // Carta 2
@@ -298,8 +310,15 @@ public class Juego extends InterfaceJuego {
         // Info Juego
         int el=this.tablero.getZombiesEliminados(), re=this.tablero.getEnemigosRestantes(); double tj=this.tablero.getTiempoDeJuego(); int sc=this.tablero.getScore(); String tf=String.format("%02d:%02d",(int)(tj/60),(int)(tj%60));
         // Ajuste de posición del texto
-        this.entorno.cambiarFont("Times New Roman",16,Color.WHITE,1); this.entorno.escribirTexto("Eliminados: "+el,260,40); this.entorno.escribirTexto("Restantes: "+re,260,70); this.entorno.escribirTexto("Tiempo: "+tf,420,40);
-        this.entorno.cambiarFont("Times New Roman",18,Color.ORANGE,1); this.entorno.escribirTexto("SCORE: "+sc,680,50);
+        this.entorno.cambiarFont("Digital-7",16,Color.BLACK,1);
+        this.entorno.dibujarImagen(this.imgboton, 312, 40, 0, 0.25);
+        this.entorno.escribirTexto("Eliminados: "+el,260,40);
+        this.entorno.dibujarImagen(this.imgboton, 312, 75, 0, 0.25);
+        this.entorno.escribirTexto("Restantes: "+re,260,75);
+        this.entorno.dibujarImagen(this.imgboton, 470, 40, 0, 0.25);
+        this.entorno.escribirTexto("Tiempo: "+tf,420,40);
+        this.entorno.cambiarFont("Times New Roman",18,Color.ORANGE,1);
+        this.entorno.escribirTexto("SCORE: "+sc,680,50);
 
         // Planta Arrastrada
         if(this.plantaSiendoArrastrada!=null){
@@ -323,14 +342,14 @@ public class Juego extends InterfaceJuego {
         this.entorno.escribirTexto("  JUGAR DE NUEVO", BOTON_REINICIO_X - 80, BOTON_REINICIO_Y + 8);//texto del boton
         this.entorno.dibujarRectangulo(BOTON_MENU_X, BOTON_MENU_Y, BOTON_MENU_ANCHO, BOTON_MENU_ALTO, 0, new Color(0, 0, 0, 180));//boton de menu al finalizar
         this.entorno.cambiarFont("Impact", 22, Color.CYAN, 1);//font del boton
-        this.entorno.escribirTexto("MENU PRINCIPAL", BOTON_MENU_X - 95, BOTON_MENU_Y + 8);}//texto del boton
+        this.entorno.escribirTexto("MENU PRINCIPAL", BOTON_MENU_X - 75, BOTON_MENU_Y + 8);}//texto del boton
         if(this.tablero.isJuegoGanado()){this.entorno.cambiarFont("Impact",30,Color.GREEN,1); this.entorno.escribirTexto("¡FELICIDADES SALVASTE LA NAVIDAD!",this.entorno.ancho()/2-220,this.entorno.alto()/2);
         this.entorno.dibujarRectangulo(BOTON_REINICIO_X, BOTON_REINICIO_Y, BOTON_REINICIO_ANCHO, BOTON_REINICIO_ALTO, 0, new Color(0, 0, 0, 180));//boton de reinicio del juego
         this.entorno.cambiarFont(null, 22, Color.YELLOW, 1);//font del boton
         this.entorno.escribirTexto("JUGAR OTRA VEZ", BOTON_REINICIO_X - 100, BOTON_REINICIO_Y + 8);//texto del boton
         this.entorno.dibujarRectangulo(BOTON_MENU_X, BOTON_MENU_Y, BOTON_MENU_ANCHO, BOTON_MENU_ALTO, 0, new Color(0, 0, 0, 180));//boton de menu al finalizar
         this.entorno.cambiarFont("Impact", 22, Color.CYAN, 1);//font del boton
-        this.entorno.escribirTexto("MENU PRINCIPAL", BOTON_MENU_X - 95, BOTON_MENU_Y + 8);}//texto del boton
+        this.entorno.escribirTexto("MENU PRINCIPAL", BOTON_MENU_X - 75, BOTON_MENU_Y + 8);}//texto del boton
     }
     
     //Manejo de creditos
