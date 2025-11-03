@@ -65,6 +65,12 @@ public class Tablero {
     private int zombiesEliminados;
     private boolean bossSpawned;
     private double tiempoHastaProximoZombie;
+    
+    private double tiempoTranscurrido = 0;
+    private double factorAceleracion = 1.0; //comienza sin aceleracion
+    private static final double MIN_INTERVALO = 1.5; //tiempo minimo entre zombies
+    private static final double TIEMPO_ACELERACION = 40; //cada 40 segundos
+    private static final double FACTOR_REDUCCION = 0.75;
 
 
     // Constructor
@@ -141,7 +147,21 @@ public class Tablero {
 
     private void generarEnemigos() {
         if (this.bossSpawned) { return; }
+        
         if (this.zombiesEliminados >= ENEMIGOS_PARA_JEFE) { spawnBoss(); return; }
+        
+        this.tiempoTranscurrido += 1.0 / 60.0;
+
+        // Cada 40 segundos reduce el tiempo de spawn un 25%
+        if (this.tiempoTranscurrido >= TIEMPO_ACELERACION) {
+            this.tiempoTranscurrido = 0; // reinicia el contador
+            this.factorAceleracion *= FACTOR_REDUCCION;
+
+            // Calcula el nuevo intervalo base, con mínimo de 1.5 segundos
+            double nuevoIntervalo = INTERVALO_ZOMBIE * this.factorAceleracion;
+            if (nuevoIntervalo < MIN_INTERVALO)
+                this.factorAceleracion = MIN_INTERVALO / INTERVALO_ZOMBIE;
+        }
         this.tiempoHastaProximoZombie -= 1.0 / 60.0;
         if (this.tiempoHastaProximoZombie <= 0 && this.contarZombies() < MAX_ZOMBIES_TOTAL) {
             final double INICIO_Y = INICIO_Y_GRILLA + (ALTO_CELDA / 2);
@@ -152,7 +172,11 @@ public class Tablero {
             else if (chance < 0.60) { for (int i = 0; i < this.zombiesFast.length; i++) { if (this.zombiesFast[i] == null) { this.zombiesFast[i] = new ZombieFast(xSpawn, ySpawn, this.imgZombieFast); break; } } }
             else if (chance < 0.80) { for (int i = 0; i < this.zombiesSlow.length; i++) { if (this.zombiesSlow[i] == null) { this.zombiesSlow[i] = new ZombieSlow(xSpawn, ySpawn, this.imgZombieSlow); break; } } }
             else { for (int i = 0; i < this.zombiesShooter.length; i++) { if (this.zombiesShooter[i] == null) { this.zombiesShooter[i] = new ZombieShooter(xSpawn, ySpawn, this.imgZombieShooter); break; } } }
-            this.tiempoHastaProximoZombie = INTERVALO_ZOMBIE * (0.8 + this.random.nextDouble() * 0.4);
+            double intervaloActual = INTERVALO_ZOMBIE * this.factorAceleracion;
+            if (intervaloActual < MIN_INTERVALO)
+                intervaloActual = MIN_INTERVALO;
+
+            this.tiempoHastaProximoZombie = intervaloActual * (0.8 + this.random.nextDouble() * 0.4);
         }
     }
 
