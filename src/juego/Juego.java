@@ -369,18 +369,20 @@ public class Juego extends InterfaceJuego {
         entorno.dibujarRectangulo(400, 300, 800, 600, 0, Color.BLACK);
         entorno.cambiarFont("Impact", 36, Color.WHITE, 0);
         entorno.escribirTexto("CREDITOS", 320, 100);
+        entorno.escribirTexto("Integrantes", 300, 150);
+        entorno.escribirTexto("Profesores", 305, 300);
+        entorno.escribirTexto("Gracias por jugar!", 250, 400);
 
         entorno.cambiarFont("Arial", 22, Color.LIGHT_GRAY, 0);
-        entorno.escribirTexto("Programacion: Lautaro Alvo", 200, 220);
-        entorno.escribirTexto("Diseño y Sonido: Tomas Patroni", 200, 240);
-        entorno.escribirTexto("Colaboracion: Ezequiel Fernandez", 200, 260);
-        entorno.escribirTexto("Comision: 03", 200, 280);
-        entorno.escribirTexto("Profesores: Lucas Bidart Gauna, Leonardo Davalos", 200, 300);
-        entorno.escribirTexto("Gracias por jugar!", 330, 350);
+        entorno.escribirTexto("Lautaro Alvo", 320, 180);
+        entorno.escribirTexto("Tomas Patroni", 310, 200);
+        entorno.escribirTexto("Ezequiel Fernandez", 290, 220);
+        entorno.escribirTexto("Comision: 03", 320, 260);
+        entorno.escribirTexto("Lucas Bidart Gauna, Leonardo Davalos", 200, 330);
 
-        entorno.dibujarRectangulo(400, 500, 180, 50, 0, new Color(0, 0, 0, 150));
-        entorno.cambiarFont("Impact", 22, Color.YELLOW, 0);
-        entorno.escribirTexto("VOLVER", 350, 510);
+        entorno.dibujarRectangulo(387, 495, 150, 50, 0, new Color(200, 0, 0, 100));
+        entorno.cambiarFont("Impact", 40, Color.YELLOW, 0);
+        entorno.escribirTexto("VOLVER", 330, 510);
     }
 
     public static void main(String[] args) {
