@@ -30,7 +30,7 @@ public class ObjetoDeJuego {
         } else {
             this.escala = 1.0; //Sin imagen, escala 1
         }
-        // System.out.println("  ObjetoDeJuego: Escala calculada=" + this.escala + " para objeto en ("+ x + "," + y + ")"); // Log opcional
+        // System.out.println("  ObjetoDeJuego: Escala calculada=" + this.escala + " para objeto en ("+ x + "," + y + ")"); // Log
     }
 
 
@@ -42,16 +42,17 @@ public class ObjetoDeJuego {
     }
 
 
-
+	
     public void mover(double dx, double dy) { this.posicion.mover(dx, dy); }
     public Punto getPosicion() { return this.posicion; }
     public double getX() { return this.posicion.getX(); }
     public double getY() { return this.posicion.getY(); }
     public double getAncho() { return this.ancho; } 
-    public double getAlto() { return this.alto; }   
+    public double getAlto() { return this.alto; }
     public Image getImagen() { return this.imagen; }
     public void setPosicion(double x, double y) { this.posicion.setX(x); this.posicion.setY(y); }
     public void setImagen(Image nuevaImagen) { this.imagen = nuevaImagen; /* Recalcular escala */ if (this.imagen != null && this.imagen.getWidth(null) > 0) { this.escala = this.ancho / this.imagen.getWidth(null); } else { this.escala = 1.0; } }
+    //Axis-Aligned Bounding Box
     public static boolean colisionan(Punto p1, double a1, double h1, Punto p2, double a2, double h2) { boolean nc = p1.getX()-a1/2>=p2.getX()+a2/2 || p1.getX()+a1/2<=p2.getX()-a2/2 || p1.getY()-h1/2>=p2.getY()+h2/2 || p1.getY()+h1/2<=p2.getY()-h2/2; return !nc; }
-
+    
 }

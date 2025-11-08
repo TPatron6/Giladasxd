@@ -15,11 +15,7 @@ import javax.sound.sampled.AudioInputStream;
 import java.io.File;
 
 public class Juego extends InterfaceJuego {
-	private enum EstadoJuego {
-	    MENU,
-	    JUGANDO,
-	    CREDITOS
-	}
+
 
 	private EstadoJuego estadoActual = EstadoJuego.MENU;
 
@@ -75,6 +71,8 @@ public class Juego extends InterfaceJuego {
     private static final double BOTON_MENU_ANCHO = 220;
     private static final double BOTON_MENU_ALTO = 50;
 
+    
+
 
     Juego() {
         this.entorno = new Entorno(this, "La Invasión Grinch", 800, 600);
@@ -83,14 +81,14 @@ public class Juego extends InterfaceJuego {
         this.imgFondoPasto = Herramientas.cargarImagen("Field.png");
         this.imgRoseBlade = Herramientas.cargarImagen("RoseBlade.png");
         this.imgWallNut = Herramientas.cargarImagen("WallNut.png");
-        this.imgPlantaExplosiva = Herramientas.cargarImagen("planta-explosiva.png"); // Corregido a jpg
-        this.imgTumba = Herramientas.cargarImagen("tumba.png"); // <-- NUEVO (Asegúrate que exista)
+        this.imgPlantaExplosiva = Herramientas.cargarImagen("planta-explosiva.png"); // Corregir a png
+        this.imgTumba = Herramientas.cargarImagen("tumba.png");
         this.gifZombie = Herramientas.cargarImagen("Zombie.gif");
         this.gifZombieFast = Herramientas.cargarImagen("Fastazul.gif");
         this.gifZombieSlow = Herramientas.cargarImagen("Slowrojo.gif");
         this.gifZombieShooter = Herramientas.cargarImagen("violetashooter.gif");
         this.gifZombieBoss = Herramientas.cargarImagen("zombie-gigante.gif");
-        this.gifProyectil = Herramientas.cargarImagen("FireBall.gif"); // Corregido a B mayúscula
+        this.gifProyectil = Herramientas.cargarImagen("FireBall.gif"); 
         this.gifProyectilZombie = Herramientas.cargarImagen("ZombieFireball.gif");
         this.imgRegalo = Herramientas.cargarImagen("regalo.png");
         this.imgUI = Herramientas.cargarImagen("UI.png");
@@ -136,6 +134,13 @@ public class Juego extends InterfaceJuego {
         this.mouseEstabaPresionado = false;
         this.plantaSeleccionada = null;
     }
+    
+    
+	private enum EstadoJuego {
+	    MENU,
+	    JUGANDO,
+	    CREDITOS
+	}
 
     public void tick() {
         switch (estadoActual) {
@@ -161,12 +166,15 @@ public class Juego extends InterfaceJuego {
         }
     }
     
+
+	
     //Logica del tick movida
     private void ejecutarJuego() {
     	this.cartaRoseBlade.actualizarCooldown();
         this.cartaWallNut.actualizarCooldown();
         this.cartaPlantaExplosiva.actualizarCooldown();
-
+        
+        
         this.manejarInput();
         this.tablero.actualizar();
         this.tablero.dibujar(this.entorno);
