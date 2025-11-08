@@ -9,6 +9,11 @@ import juego.planta.RoseBlade;
 import juego.planta.WallNut;
 import juego.planta.PlantaExplosiva;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.AudioInputStream;
+import java.io.File;
+
 public class Juego extends InterfaceJuego {
 	private enum EstadoJuego {
 	    MENU,
@@ -24,7 +29,13 @@ public class Juego extends InterfaceJuego {
     // Imagenes
     private Image imgFondoPasto, imgRoseBlade, imgWallNut, imgPlantaExplosiva, imgTumba,
             gifZombie, gifZombieFast, gifZombieSlow, gifZombieShooter, gifZombieBoss,
-            gifProyectil, gifProyectilZombie, imgRegalo, imgUI, gifExplosion, imgmenu, imgboton;
+            gifProyectil, gifProyectilZombie, imgRegalo, imgUI, gifExplosion, imgmenu, imgboton, imgcreditos;
+    
+    //Audios menu y partida
+    private Clip musicamenu;
+    private Clip musicapartida;
+    private boolean musicamenuActiva = false;
+    private boolean musicapActiva = false;
 
     // UI
     private static final double CARTA1_X = 50;
@@ -86,12 +97,27 @@ public class Juego extends InterfaceJuego {
         this.gifExplosion = Herramientas.cargarImagen("explosion.gif");
         this.imgmenu = Herramientas.cargarImagen("Menu.png");
         this.imgboton = Herramientas.cargarImagen("Boton.png");
+        this.imgcreditos = Herramientas.cargarImagen("Creditos.png");
+        this.musicamenu = Herramientas.cargarSonido("Menu.wav");
+        this.musicapartida = Herramientas.cargarSonido("Partida.wav");
+        
+        ajustarVolumen(this.musicamenu, -20.0f);
+        ajustarVolumen(this.musicapartida, -8.0f);
+        
         
         
         this.inicializarJuego();
         this.entorno.iniciar();
     }
 
+    private void ajustarVolumen(Clip clip, float volumen) {
+        if (clip != null && clip.isControlSupported(javax.sound.sampled.FloatControl.Type.MASTER_GAIN)) {
+            javax.sound.sampled.FloatControl control = 
+                (javax.sound.sampled.FloatControl) clip.getControl(javax.sound.sampled.FloatControl.Type.MASTER_GAIN);
+            control.setValue(volumen);
+        }
+    }
+    
     private void inicializarJuego() {
         // Constructor de Tablero
         this.tablero = new Tablero(
@@ -112,20 +138,27 @@ public class Juego extends InterfaceJuego {
     }
 
     public void tick() {
-    	//Manejo del Menu
-    	switch (estadoActual) {
-        case MENU:
-            dibujarMenu();
-            manejarInputMenu();
-            break;
-        case CREDITOS:
-            dibujarCreditos();
-            manejarInputCreditos();
-            break;
-        case JUGANDO:
-            ejecutarJuego();
-            break;
-    	}
+        switch (estadoActual) {
+            case MENU:
+                if (musicapartida != null && musicapartida.isRunning()) musicapartida.stop();
+                if (musicamenu != null && !musicamenu.isRunning()) musicamenu.loop(Clip.LOOP_CONTINUOUSLY);
+                dibujarMenu();
+                manejarInputMenu();
+                break;
+
+            case CREDITOS:
+                if (musicapartida != null && musicapartida.isRunning()) musicapartida.stop();
+                if (musicamenu != null && !musicamenu.isRunning()) musicamenu.loop(Clip.LOOP_CONTINUOUSLY);
+                dibujarCreditos();
+                manejarInputCreditos();
+                break;
+
+            case JUGANDO:
+                if (musicamenu != null && musicamenu.isRunning()) musicamenu.stop();
+                if (musicapartida != null && !musicapartida.isRunning()) musicapartida.loop(Clip.LOOP_CONTINUOUSLY);
+                ejecutarJuego();
+                break;
+        }
     }
     
     //Logica del tick movida
@@ -366,9 +399,11 @@ public class Juego extends InterfaceJuego {
     
     //Creditos agregados
     private void dibujarCreditos() {
-        entorno.dibujarRectangulo(400, 300, 800, 600, 0, Color.BLACK);
+    	entorno.dibujarImagen(this.imgcreditos, 400, 300, 0, 1.0);
+    	entorno.dibujarRectangulo(400, 300, 800, 600, 0, new Color(0, 0, 0, 100));
+        
         entorno.cambiarFont("Impact", 36, Color.WHITE, 0);
-        entorno.escribirTexto("CREDITOS", 320, 100);
+        entorno.escribirTexto("CREDITOS", 315, 100);
         entorno.escribirTexto("Integrantes", 300, 150);
         entorno.escribirTexto("Profesores", 305, 300);
         entorno.escribirTexto("Gracias por jugar!", 250, 400);
