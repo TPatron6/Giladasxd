@@ -5,10 +5,9 @@ import juego.ObjetoDeJuego;
 import juego.Punto;
 import java.awt.Image;
 
-/**
- * Representa un proyectil disparado por un Zombie
- * Se mueve de derecha a izquierda
- */
+
+
+
 public class ProyectilZombie {
     
     private ObjetoDeJuego base;

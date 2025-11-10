@@ -1,16 +1,16 @@
 package juego;
 
 import entorno.Entorno;
-import juego.entidades.*; // Importa todo el paquete
-import juego.planta.*; // Importa todo el paquete
+import juego.entidades.*;
+import juego.planta.*;
 
 import java.util.Random;
 import java.awt.Image;
-import java.awt.Color; // Necesario para Color.GRAY etc. en dibujar()
+import java.awt.Color; 
 
 public class Tablero {
 
-    // --- Constantes ---
+    //Constantes 
     private static final int MAX_PLANTAS_POR_TIPO = 25;
     private static final int MAX_PLANTAS_EXPLOSIVAS = 10;
     private static final int MAX_EXPLOSIONES = 10;
@@ -38,7 +38,7 @@ public class Tablero {
     private static final double INTERVALO_ZOMBIE = 4.0;
     private static final double CHANCE_TUMBA = 0.25;
 
-    // --- Arrays ---
+    //Arrays
     private RoseBlade[] roseBlades;
     private WallNut[] wallNuts;
     private PlantaExplosiva[] plantasExplosivas;
@@ -53,10 +53,11 @@ public class Tablero {
     private Regalo[] regalos;
     private Explosion[] explosiones;
 
-    // --- Imágenes y Estado ---
+    //Imágenes y Estado 
     private Image imgFondoPasto, imgRoseBlade, imgWallNut, imgPlantaExplosiva, imgTumba,
             imgZombie, imgZombieFast, imgZombieSlow, imgZombieShooter, imgZombieBoss,
             imgProyectil, imgProyectilZombie, imgRegalo, imgExplosion;
+    
     private int score;
     private boolean juegoTerminado;
     private Random random;
@@ -69,7 +70,7 @@ public class Tablero {
     private double tiempoTranscurrido = 0;
     private double factorAceleracion = 1.0; //comienza sin aceleracion
     private static final double MIN_INTERVALO = 1.5; //tiempo minimo entre zombies
-    private static final double TIEMPO_ACELERACION = 40; //cada 40 segundos
+    private static final double TIEMPO_ACELERACION = 10; //cada 10 segundos
     private static final double FACTOR_REDUCCION = 0.75;
 
 
@@ -129,8 +130,8 @@ public class Tablero {
         this.actualizarProyectiles();
         this.generarEnemigos();
         this.resetearColisionesZombies();
-        this.gestionarColisiones(); // Este método ahora setea las colisiones
-        this.moverZombies(); // Mueve solo si no está colisionando
+        this.gestionarColisiones(); 
+        this.moverZombies(); 
         this.limpiarEntidades();
     }
 
@@ -152,7 +153,7 @@ public class Tablero {
         
         this.tiempoTranscurrido += 1.0 / 60.0;
 
-        // Cada 40 segundos reduce el tiempo de spawn un 25%
+        // Cada 10 segundos reduce el tiempo de spawn un 25%
         if (this.tiempoTranscurrido >= TIEMPO_ACELERACION) {
             this.tiempoTranscurrido = 0; // reinicia el contador
             this.factorAceleracion *= FACTOR_REDUCCION;
@@ -218,7 +219,7 @@ public class Tablero {
 
 
     private void gestionarColisiones() {
-        // 1. Bala de PLANTA vs (Tumbas Y Zombies)
+        //proyectil de PLANTA vs (Tumbas Y Zombies)
         for (int i = 0; i < this.proyectiles.length; i++) {
             if (this.proyectiles[i] == null) continue; Proyectil p = this.proyectiles[i]; boolean balaChoco = false;
             for (int j = 0; j < this.tumbas.length; j++) { if (this.tumbas[j] != null && colisionEntidades(p.getPosicion(), p.getAncho(), p.getAlto(), this.tumbas[j].getPosicion(), this.tumbas[j].getAncho(), this.tumbas[j].getAlto())) { this.tumbas[j].recibirDano(p.getDano()); balaChoco = true; break; } } if (balaChoco) { this.proyectiles[i] = null; continue; }
@@ -229,7 +230,7 @@ public class Tablero {
             for (int j = 0; j < this.zombiesBoss.length; j++) { if (this.zombiesBoss[j] != null && colisionEntidades(p.getPosicion(), p.getAncho(), p.getAlto(), this.zombiesBoss[j].getPosicion(), this.zombiesBoss[j].getAncho(), this.zombiesBoss[j].getAlto())) { this.zombiesBoss[j].recibirDano(p.getDano()); balaChoco = true; break; } } if (balaChoco) { this.proyectiles[i] = null; this.score += 50; continue; }
         }
 
-        // 2. Zombies vs Regalo
+        // Zombies vs Regalo
         for (int j = 0; j < this.regalos.length; j++) {
              Regalo r = this.regalos[j]; if (r == null) continue;
              for (int i = 0; i < this.zombies.length; i++) { if (this.zombies[i] != null && colisionEntidades(this.zombies[i].getPosicion(), this.zombies[i].getAncho(), this.zombies[i].getAlto(), r.getPosicion(), r.getAncho(), r.getAlto())) { this.juegoTerminado = true; return; } }
@@ -239,10 +240,10 @@ public class Tablero {
              for (int i = 0; i < this.zombiesBoss.length; i++) { if (this.zombiesBoss[i] != null && colisionEntidades(this.zombiesBoss[i].getPosicion(), this.zombiesBoss[i].getAncho(), this.zombiesBoss[i].getAlto(), r.getPosicion(), r.getAncho(), r.getAlto())) { this.juegoTerminado = true; return; } }
         }
 
-        // 3. Colisión y Ataque Melee Zombies vs Obstáculos
+        // Colisión y Ataque Melee Zombies vs Obstáculos
         gestionarColisionYAtaqueZombieObstaculo();
 
-        // 4. Bala de ZOMBIE vs (Tumbas y Plantas)
+        // proyectil de ZOMBIE vs (Tumbas y Plantas)
         for (int i = 0; i < this.proyectilesZombies.length; i++) {
             if (this.proyectilesZombies[i] == null) continue; ProyectilZombie pz = this.proyectilesZombies[i]; boolean balaChoco = false;
             for (int j = 0; j < this.tumbas.length; j++) { if (this.tumbas[j] != null && colisionEntidades(pz.getPosicion(), pz.getAncho(), pz.getAlto(), this.tumbas[j].getPosicion(), this.tumbas[j].getAncho(), this.tumbas[j].getAlto())) { balaChoco = true; break; } } if (balaChoco) { this.proyectilesZombies[i] = null; continue; }
@@ -252,22 +253,19 @@ public class Tablero {
         }
     }
 
-    // --- MÉTODOS DE AYUDA (HELPER) ---
-
+    //MÉTODOS DE AYUDA (Axis-Aligned Bounding Box) 
     private boolean colisionEntidades(Punto p1, double a1, double h1, Punto p2, double a2, double h2) { return ObjetoDeJuego.colisionan(p1, a1, h1, p2, a2, h2); }
 
-    /**
-     * Gestiona la colisión y el ataque melee de TODOS los zombies contra TODOS los obstáculos.
-     */
+     //Gestiona la colisión y el ataque melee de TODOS los zombies contra TODOS los obstáculos.
     private void gestionarColisionYAtaqueZombieObstaculo() {
 
-        // --- 1. ZOMBIES NORMALES vs OBSTACULOS ---
+        //  ZOMBIES NORMALES vs OBSTACULOS
         for (int i = 0; i < this.zombies.length; i++) { if (this.zombies[i] != null) chequearColisionYAtaqueZombieNormal(this.zombies[i]); }
         for (int i = 0; i < this.zombiesFast.length; i++) { if (this.zombiesFast[i] != null) chequearColisionYAtaqueZombieNormal(this.zombiesFast[i]); }
         for (int i = 0; i < this.zombiesSlow.length; i++) { if (this.zombiesSlow[i] != null) chequearColisionYAtaqueZombieNormal(this.zombiesSlow[i]); }
         for (int i = 0; i < this.zombiesShooter.length; i++) { if (this.zombiesShooter[i] != null) chequearColisionYAtaqueZombieNormal(this.zombiesShooter[i]); }
 
-        // --- 2. JEFE vs OBSTACULOS ---
+        // JEFE vs OBSTACULOS 
         for (int i = 0; i < this.zombiesBoss.length; i++) {
             if (this.zombiesBoss[i] == null) continue;
             ZombieBoss boss = this.zombiesBoss[i];
@@ -284,9 +282,9 @@ public class Tablero {
         }
     }
 
-     /**
-      * Chequea colisión y si la encuentra, setea flag Y ataca.
-      */
+
+      //Chequea colisión y si la encuentra, setea flag Y ataca.
+ 
      private void chequearColisionYAtaqueZombieNormal(Object z) {
         double zX=0, zY=0, zAncho=0, zAlto=0;
         boolean puedeAtacar = false;
@@ -345,31 +343,31 @@ public class Tablero {
 
     // Limpiar Entidades
     private void limpiarEntidades() {
-        // 1 Zombies muertos
+        // Zombies muertos
         for (int i = 0; i < this.zombies.length; i++) { if (this.zombies[i] != null && this.zombies[i].estaMuerto()) { if (random.nextDouble() < CHANCE_TUMBA) { agregarTumba(this.zombies[i].getX(), this.zombies[i].getY()); } this.zombies[i] = null; this.zombiesEliminados++; } }
         for (int i = 0; i < this.zombiesFast.length; i++) { if (this.zombiesFast[i] != null && this.zombiesFast[i].estaMuerto()) { if (random.nextDouble() < CHANCE_TUMBA) { agregarTumba(this.zombiesFast[i].getX(), this.zombiesFast[i].getY()); } this.zombiesFast[i] = null; this.zombiesEliminados++; } }
         for (int i = 0; i < this.zombiesSlow.length; i++) { if (this.zombiesSlow[i] != null && this.zombiesSlow[i].estaMuerto()) { if (random.nextDouble() < CHANCE_TUMBA) { agregarTumba(this.zombiesSlow[i].getX(), this.zombiesSlow[i].getY()); } this.zombiesSlow[i] = null; this.zombiesEliminados++; } }
         for (int i = 0; i < this.zombiesShooter.length; i++) { if (this.zombiesShooter[i] != null && this.zombiesShooter[i].estaMuerto()) { if (random.nextDouble() < CHANCE_TUMBA) { agregarTumba(this.zombiesShooter[i].getX(), this.zombiesShooter[i].getY()); } this.zombiesShooter[i] = null; this.zombiesEliminados++; } }
         for (int i = 0; i < this.zombiesBoss.length; i++) { if (this.zombiesBoss[i] != null && this.zombiesBoss[i].estaMuerto()) { this.zombiesBoss[i] = null; this.zombiesEliminados++; this.score += 1000; } }
 
-        // 2 balas fuera
+        // balas fuera
         for (int i = 0; i < this.proyectiles.length; i++) { if (this.proyectiles[i] != null) { double x = this.proyectiles[i].getX(); if (x > 850 || x < -50) this.proyectiles[i] = null; } }
         for (int i = 0; i < this.proyectilesZombies.length; i++) { if (this.proyectilesZombies[i] != null) { double x = this.proyectilesZombies[i].getX(); if (x > 850 || x < -50) this.proyectilesZombies[i] = null; } }
 
-        // 3 plantas muertas
+        // plantas muertas
         for (int i = 0; i < this.roseBlades.length; i++) { if (this.roseBlades[i] != null && this.roseBlades[i].estaMuerta()) { this.roseBlades[i] = null; } }
         for (int i = 0; i < this.wallNuts.length; i++) { if (this.wallNuts[i] != null && this.wallNuts[i].estaMuerta()) { this.wallNuts[i] = null; } }
 
-        // 4 Limpieza de plantas explosivas
+        // Limpieza de plantas explosivas
         for (int i = 0; i < this.plantasExplosivas.length; i++) { if (this.plantasExplosivas[i] != null && this.plantasExplosivas[i].estaMuerta()) { aplicarDanoExplosivo(this.plantasExplosivas[i].getX(), this.plantasExplosivas[i].getY()); agregarExplosion(this.plantasExplosivas[i].getX(), this.plantasExplosivas[i].getY()); this.plantasExplosivas[i] = null; } }
 
-        // 5 Limpieza de animaciones de explosión
+        // Limpieza de animaciones de explosión
         for (int i = 0; i < this.explosiones.length; i++) { if (this.explosiones[i] != null && this.explosiones[i].haTerminado()) { this.explosiones[i] = null; } }
 
-        // 6 Limpieza de Tumbas
+        // Limpieza de Tumbas
         for (int i = 0; i < this.tumbas.length; i++) { if (this.tumbas[i] != null && this.tumbas[i].estaDestruida()) { this.tumbas[i] = null; } }
 
-        // 7 chequea si ganaste
+        // chequea si ganaste
         if (!this.juegoGanado && this.bossSpawned) { boolean bossVivo = false; for (int i = 0; i < this.zombiesBoss.length; i++) { if (this.zombiesBoss[i] != null) { bossVivo = true; break; } } if (!bossVivo) { this.juegoGanado = true; } }
     }
 
@@ -394,8 +392,10 @@ public class Tablero {
         for (int i = 0; i < this.regalos.length; i++) { if (this.regalos[i] != null) this.regalos[i].dibujar(e); }
         for (int i = 0; i < this.explosiones.length; i++) { if (this.explosiones[i] != null) this.explosiones[i].dibujar(e); }
     }
+    
 
-    // --- MÉTODOS DE INTERACCIÓN ---
+
+    // MÉTODOS DE INTERACCIÓN
 
     public Object getObjetoEnCoordenadas(double x, double y) { Object planta = getPlantaEnCoordenadas(x, y); if (planta != null) return planta; Tumba tumba = getTumbaEnCoordenadas(x, y); if (tumba != null) return tumba; return null; }
     public Object getPlantaEnCoordenadas(double x, double y) { for(int i = 0; i < this.roseBlades.length; i++) { if (this.roseBlades[i] != null && colisionPuntoRect(x, y, this.roseBlades[i].getX(), this.roseBlades[i].getY(), this.roseBlades[i].getAncho(), this.roseBlades[i].getAlto())) return this.roseBlades[i]; } for(int i = 0; i < this.wallNuts.length; i++) { if (this.wallNuts[i] != null && colisionPuntoRect(x, y, this.wallNuts[i].getX(), this.wallNuts[i].getY(), this.wallNuts[i].getAncho(), this.wallNuts[i].getAlto())) return this.wallNuts[i]; } for(int i = 0; i < this.plantasExplosivas.length; i++) { if (this.plantasExplosivas[i] != null && colisionPuntoRect(x, y, this.plantasExplosivas[i].getX(), this.plantasExplosivas[i].getY(), this.plantasExplosivas[i].getAncho(), this.plantasExplosivas[i].getAlto())) return this.plantasExplosivas[i]; } return null; }
@@ -403,18 +403,15 @@ public class Tablero {
     private boolean colisionPuntoRect(double px, double py, double rx, double ry, double rancho, double ralto) { return px >= rx - rancho / 2 && px <= rx + rancho / 2 && py >= ry - ralto / 2 && py <= ry + ralto / 2; }
     public boolean estaOcupada(double x, double y) { return getObjetoEnCoordenadas(x, y) != null; }
 
-    // CORREGIDO: Lógica para bloquear movimiento a la primera columna
+    //logica para bloquear movimiento a la primera columna
     public boolean estaOcupadaPorOtroObjeto(double x, double y, Object objetoAExcluir) {
-        // 1. Check si es la primera columna (la de los regalos)
         if (x < ANCHO_CELDA) {
-            return true; // Bloquea movimiento a la primera columna
+            return true;
         }
-        // 2. Check si hay otra planta o tumba (lógica anterior)
         Object objetoEnCelda = getObjetoEnCoordenadas(x, y);
         if (objetoEnCelda != null && objetoEnCelda != objetoAExcluir) {
-            return true; // Ocupada por otra planta/tumba
+            return true;
         }
-        // 3. Si no es la primera columna Y no hay otra planta/tumba, está libre
         return false;
     }
 

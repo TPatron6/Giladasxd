@@ -14,7 +14,7 @@ public class ZombieShooter {
     private int vida;
     private double velocidad;
     private int ataque;
-    private boolean estaColisionandoConPlanta; // PRIVADO
+    private boolean estaColisionandoConPlanta;
     private double tiempoHastaAtaque;
     private static final double COOLDOWN_ATAQUE = 1.5;
 
@@ -118,13 +118,10 @@ public class ZombieShooter {
     public double getAlto() { return this.base.getAlto(); }
     public int getAtaque() { return this.ataque; }
     public double getVelocidad() { return this.velocidad; }
-
-    // --- NUEVOS GETTERS PÚBLICOS ---
     public boolean estaColisionandoConPlanta() {
         return this.estaColisionandoConPlanta;
     }
     public boolean estaParadoParaDisparar() {
         return this.estaParadoParaDisparar;
     }
-    // ---------------------------------
 }

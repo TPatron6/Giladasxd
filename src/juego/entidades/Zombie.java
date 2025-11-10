@@ -14,7 +14,7 @@ public class Zombie {
     private int vida;
     private double velocidad;
     private int ataque;
-    private boolean estaColisionandoConPlanta; // PRIVADO
+    private boolean estaColisionandoConPlanta; 
     private double tiempoHastaAtaque;
     private static final double COOLDOWN_ATAQUE = 1.5;
 
@@ -70,12 +70,6 @@ public class Zombie {
     public double getAlto() { return this.base.getAlto(); }
     public int getAtaque() { return this.ataque; }
     public double getVelocidad() { return this.velocidad; }
-
-    // --- NUEVO GETTER PÚBLICO ---
-    /**
-     * Devuelve si el zombie está actualmente colisionando con un obstáculo.
-     * @return true si está colisionando, false si no.
-     */
     public boolean estaColisionandoConPlanta() {
         return this.estaColisionandoConPlanta;
     }

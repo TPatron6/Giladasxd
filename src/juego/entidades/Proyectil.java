@@ -5,10 +5,7 @@ import juego.ObjetoDeJuego;
 import juego.Punto;
 import java.awt.Image;
 
-/**
- * Representa una bola de fuego disparada por una planta
- * Se mueve de izquierda a derecha
- */
+
 public class Proyectil {
     
     private ObjetoDeJuego base;
@@ -16,7 +13,7 @@ public class Proyectil {
     private static final double ANCHO = 50;
     private static final double ALTO = 50;
     private static final double VELOCIDAD = 5.0; // Píxeles por tick
-    private static final int DANO = 50; // 2 disparos para matar un zombie (asumiendo 100 de vida)
+    private static final int DANO = 50;
 
 
      //Crea un proyectil en la posición (x, y) con la imagen dada.
@@ -25,17 +22,13 @@ public class Proyectil {
         this.base = new ObjetoDeJuego(x, y, ANCHO, ALTO, imagen);
     }
 
-    /**
-     * Método de actualización (llamado por Tablero)
-     * Mueve el proyectil hacia la derecha
-     */
+
+     //Método de actualización (llamado por Tablero)
+     //Mueve el proyectil hacia la derecha
     public void actualizar() {
         this.base.mover(VELOCIDAD, 0); 
     }
 
-    /**
-     * Dibuja el proyectil en pantalla.
-     */
     public void dibujar(Entorno e) {
         this.base.dibujar(e);
     }

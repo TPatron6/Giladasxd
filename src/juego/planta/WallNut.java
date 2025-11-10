@@ -17,8 +17,8 @@ public class WallNut {
     private int vida;
     private double tiempoCargaRestante; //Para el prototipo de la UI
 
-    // --- Constantes ---
-    public static final double ANCHO_WALLNUT = 65; // 'public static'
+    //Constantes
+    public static final double ANCHO_WALLNUT = 65; // 
     public static final double ALTO_WALLNUT = 65;
     private static final int VIDA_WALLNUT = 1000; // Vida inicial
 
@@ -29,14 +29,14 @@ public class WallNut {
         this.tiempoCargaRestante = 0;
     }
 
-    //Metodos
 
-    // WallNut no necesita interactuar activamente con zombies en su update
+
+    // WallNut no necesita interactuar activamente con zombies
     public void actualizar(Zombie[] zombies) {
         this.actualizarCooldown(); // Solo actualiza cooldown de carta
     }
 
-    // --- MÉTODO DIBUJAR (MODIFICADO) ---
+    //MÉTODO DIBUJAR
     public void dibujar(Entorno e) { 
         this.base.dibujar(e); 
         
@@ -58,13 +58,12 @@ public class WallNut {
     public boolean estaMuerta() { return this.vida <= 0; }
     public int getVida() { return this.vida; }
 
-    //Metodos delegados
+    //Getters (no puros?)
     public double getX() { return this.base.getX(); }
     public double getY() { return this.base.getY(); }
     public double getAncho() { return this.base.getAncho(); }
     public double getAlto() { return this.base.getAlto(); }
     public Punto getPosicion() { return this.base.getPosicion(); }
-    //Metodos necesarios que antes venian de la interfaz
     public void setPosicion(double x, double y) { this.base.setPosicion(x, y); }
     public void mover(double dx, double dy) { this.base.mover(dx, dy); }
 

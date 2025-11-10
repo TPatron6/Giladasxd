@@ -1,8 +1,7 @@
 package juego.planta;
 
 import java.awt.Image;
-import java.awt.Color;
-import juego.entidades.Zombie; // Necesario para la firma del método actualizar
+import juego.entidades.Zombie;
 import juego.ObjetoDeJuego; 
 import juego.Punto;        
 import entorno.Entorno;    
@@ -16,7 +15,7 @@ public class PlantaExplosiva {
     private int vida;
     private double tiempoCargaRestante; //Para la UI
 
-    // --- Constantes ---
+    // Constantes 
     public static final double ANCHO_EXPLOSIVA = 70; 
     public static final double ALTO_EXPLOSIVA = 70;
     // Le damos vida baja para que muera con cualquier toque
@@ -31,7 +30,7 @@ public class PlantaExplosiva {
 
     //Metodos
 
-    // Esta planta no hace nada activamente, solo espera
+    // Esta planta no hace nada, solo espera
     public void actualizar(Zombie[] zombies) {
         this.actualizarCooldown(); // Solo actualiza cooldown de carta
     }
@@ -42,9 +41,9 @@ public class PlantaExplosiva {
         // No necesita barra de vida, ya que explota al primer toque
     }
     
-    /**
-     * Al recibir CUALQUIER daño, se considera muerta para explotar.
-     */
+    
+     //Al recibir CUALQUIER daño, se considera muerta para explotar.
+
     public void recibirDano(int dano) { 
         if (dano > 0) {
             this.vida = 0; 
@@ -54,7 +53,7 @@ public class PlantaExplosiva {
     public boolean estaMuerta() { return this.vida <= 0; }
     public int getVida() { return this.vida; }
 
-    //Metodos delegados
+    //Getters (no puro?)
     public double getX() { return this.base.getX(); }
     public double getY() { return this.base.getY(); }
     public double getAncho() { return this.base.getAncho(); }

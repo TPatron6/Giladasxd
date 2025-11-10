@@ -3,7 +3,7 @@ package juego.planta;
 import entorno.Entorno;
 import juego.ObjetoDeJuego;
 import juego.Punto;
-import juego.entidades.Zombie; // Importa Zombie
+import juego.entidades.Zombie;
 import java.awt.Image;
 
 public class Planta {

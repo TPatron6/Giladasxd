@@ -38,9 +38,8 @@ public class RoseBlade {
         this.veUnZombie = false;
     }
 
-    //Metodos
 
-    // --- MÉTODO ACTUALIZAR (MODIFICADO) ---
+    //MÉTODO ACTUALIZAR 
     public void actualizar(Zombie[] zombies, ZombieFast[] zombiesFast, ZombieSlow[] zombiesSlow, ZombieShooter[] zombiesShooter, ZombieBoss[] zombiesBoss) {
         this.actualizarCooldown(); 
         if (this.tiempoHastaDisparo > 0) { this.tiempoHastaDisparo -= 1.0 / 60.0; } 
@@ -48,14 +47,14 @@ public class RoseBlade {
         // Buscar un objetivo
         this.veUnZombie = false;
         
-        // 1. Buscar en Zombies comunes
+        // Buscar en Zombies comunes
         for (int i = 0; i < zombies.length; i++) {
             if (zombies[i] != null) {
                 if (estaEnRango(zombies[i].getX(), zombies[i].getY())) { this.veUnZombie = true; break; }
             }
         }
         
-        // 2. Buscar en Zombies rápidos
+        // Buscar en Zombies rápidos
         if (!this.veUnZombie) {
             for (int i = 0; i < zombiesFast.length; i++) {
                 if (zombiesFast[i] != null) {
@@ -64,7 +63,7 @@ public class RoseBlade {
             }
         }
         
-        // 3. Buscar en Zombies lentos
+        // Buscar en Zombies lentos
         if (!this.veUnZombie) {
             for (int i = 0; i < zombiesSlow.length; i++) {
                 if (zombiesSlow[i] != null) {
@@ -73,7 +72,7 @@ public class RoseBlade {
             }
         }
 
-        // 4. Buscar en Zombies shooters
+        // Buscar en Zombies shooters
         if (!this.veUnZombie) {
             for (int i = 0; i < zombiesShooter.length; i++) {
                 if (zombiesShooter[i] != null) {
@@ -82,7 +81,7 @@ public class RoseBlade {
             }
         }
         
-        // 5. Buscar en Zombies jefes (LÓGICA ESPECIAL)
+        // Buscar en Zombies jefes (LÓGICA ESPECIAL)
         if (!this.veUnZombie) {
             for (int i = 0; i < zombiesBoss.length; i++) {
                 if (zombiesBoss[i] != null) {
@@ -105,7 +104,6 @@ public class RoseBlade {
     
     // Método de ayuda para zombies normales
     private boolean estaEnRango(double zX, double zY) {
-        // Esta comprobación es la que falla para el jefe
         boolean mismaFila = Math.abs(zY - this.getY()) < 10; 
         boolean estaDelante = zX > this.getX();
         boolean enRango = zX < (this.getX() + RANGO_ATAQUE);

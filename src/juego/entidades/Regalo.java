@@ -4,7 +4,6 @@ import entorno.Entorno;
 import juego.ObjetoDeJuego;
 import juego.Punto;
 import java.awt.Image;
-// import java.awt.Color; // <--- BORRA ESTA LÍNEA
 
 public class Regalo {
     
@@ -18,7 +17,7 @@ public class Regalo {
     }
 
     
-     //Dibuja el regalo.
+
     public void dibujar(Entorno e) {
         // Delega el dibujo al ObjetoDeJuego 'base', 
         // que ya tiene la imagen y sabe cómo dibujarse

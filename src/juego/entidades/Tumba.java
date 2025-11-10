@@ -5,16 +5,14 @@ import java.awt.Color;
 import juego.ObjetoDeJuego;
 import entorno.Entorno;
 
-/**
- * Representa una tumba dejada por un zombie.
- * Bloquea proyectiles y zombies. Tiene vida.
- */
+
+ //Bloquea proyectiles y zombies. Tiene vida
 public class Tumba {
 
     private ObjetoDeJuego base;
     private int vida;
 
-    // --- Constantes ---
+    //Constantes
     public static final double ANCHO_TUMBA = 60;
     public static final double ALTO_TUMBA = 80;
     private static final int VIDA_INICIAL = 300; // Vida de la tumba
@@ -27,7 +25,7 @@ public class Tumba {
     public void dibujar(Entorno e) {
         this.base.dibujar(e);
 
-        // Barra de vida (opcional, si quieres verla)
+        // Barra de vida 
         if (this.vida < VIDA_INICIAL) {
             double yBarra = this.base.getY() + (ALTO_TUMBA / 2) - 5;
             e.dibujarRectangulo(this.base.getX(), yBarra, ANCHO_TUMBA, 5, 0, Color.DARK_GRAY);
@@ -51,5 +49,5 @@ public class Tumba {
     public double getY() { return this.base.getY(); }
     public double getAncho() { return this.base.getAncho(); }
     public double getAlto() { return this.base.getAlto(); }
-    public juego.Punto getPosicion() { return this.base.getPosicion(); } // Asegúrate de importar Punto si es necesario
+    public juego.Punto getPosicion() { return this.base.getPosicion(); }
 }
